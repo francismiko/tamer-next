@@ -1,8 +1,9 @@
 'use client'
 
 import React from 'react';
-import { Layout, Nav, Button, Breadcrumb, Skeleton, Avatar } from '@douyinfe/semi-ui';
-import { IconSemiLogo, IconBell, IconHelpCircle, IconBytedanceLogo, IconHome, IconHistogram, IconLive, IconSetting } from '@douyinfe/semi-icons';
+import { Layout, Nav, Button, Breadcrumb, Skeleton } from '@douyinfe/semi-ui';
+import { IconSemiLogo, IconBell, IconHelpCircle, IconHome, IconHistogram, IconLive, IconSetting } from '@douyinfe/semi-icons';
+import { UserButton } from "@clerk/nextjs";
 
 export default function Home() {
   const { Header, Sider, Content } = Layout;
@@ -49,9 +50,7 @@ export default function Home() {
                     marginRight: '12px',
                   }}
                 />
-                <Avatar color="orange" size="small">
-                  YJ
-                </Avatar>
+                <UserButton />
               </>
             }
           />
