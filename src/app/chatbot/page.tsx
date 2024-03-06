@@ -2,7 +2,7 @@
 
 import { Input } from "@douyinfe/semi-ui";
 import { IconLink, IconSend } from "@douyinfe/semi-icons";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Message = {
 	text: string;
@@ -12,6 +12,7 @@ type Message = {
 export default function ChatBot() {
 	const [inputValue, setInputValue] = useState("");
 	const [messages, setMessages] = useState<Message[]>([]);
+	const scrollRef = useRef<HTMLDivElement>(null);
 
 	const handleMessageSubmit = () => {
 		if (inputValue.trim() !== "") {
@@ -26,13 +27,23 @@ export default function ChatBot() {
 		}
 	};
 
+	useEffect(() => {
+		if (scrollRef.current && messages.length > 0) {
+			scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+		}
+	}, [messages]);
+
 	return (
 		<>
-			<main className="h-[90%] overflow-y-scroll">
-				{messages.map((message) => (
+			<main ref={scrollRef} className="h-[90%] overflow-y-scroll">
+				{messages.map(({ sender, text }) => (
 					<div className="px-64">
-						<div className="inline-block px-4 py-4 mt-4 bg-slate-100 rounded-md">
-							<span>{message.text}</span>
+						<div
+							className={`inline-block px-4 py-4 mt-4 rounded-md ${
+								sender === "user" ? "bg-slate-100" : "bg-purple-100"
+							}`}
+						>
+							<span>{text}</span>
 						</div>
 					</div>
 				))}
