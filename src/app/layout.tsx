@@ -90,9 +90,9 @@ export default function RootLayout({
 							</Header>
 							<Content
 								style={{
-									padding: "24px",
 									backgroundColor: "var(--semi-color-bg-0)",
 								}}
+								className=" h-full overflow-y-auto"
 							>
 								{children}
 							</Content>
