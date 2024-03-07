@@ -1,6 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['@douyinfe/semi-ui', '@douyinfe/semi-icons', '@douyinfe/semi-illustrations'],
+	transpilePackages: [
+		"@douyinfe/semi-ui",
+		"@douyinfe/semi-icons",
+		"@douyinfe/semi-illustrations",
+	],
+	env: {
+		openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+	},
 };
 
 export default nextConfig;
