@@ -39,7 +39,6 @@ export default function ChatBot() {
 
 			if (streamQueue.length === 0 && isDone) {
 				clearInterval(typingInterval);
-				console.log("cleared");
 			}
 		}, delay);
 
