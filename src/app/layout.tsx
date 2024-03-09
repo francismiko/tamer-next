@@ -74,7 +74,7 @@ export default function RootLayout({
 										link="/chatbot"
 										itemKey={"chatbot"}
 										text={"AI 问答"}
-										icon={<LogosOpenaiIcon />}
+										icon={<LogosOpenaiIcon fontSize={18} />}
 									/>
 									<Nav.Item
 										link="/plan"
