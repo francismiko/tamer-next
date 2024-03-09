@@ -1,10 +1,11 @@
 "use client";
 
-import { Input } from "@douyinfe/semi-ui";
+import { Input, Spin } from "@douyinfe/semi-ui";
 import { IconLink, IconSend } from "@douyinfe/semi-icons";
 import { useReducer, useRef, useState } from "react";
 import { StringOutputParser } from "langchain/schema/output_parser";
 import { ChatOpenAI } from "langchain/chat_models/openai";
+import { useAuth } from "@clerk/nextjs";
 
 type Message = {
 	text: string;
@@ -12,6 +13,7 @@ type Message = {
 };
 
 export default function ChatBot() {
+	const { isLoaded } = useAuth();
 	const [inputValue, setInputValue] = useState("");
 	const mesgsRef = useRef<Message[]>([]);
 	const scrollRef = useRef<HTMLDivElement>(null);
@@ -78,6 +80,14 @@ export default function ChatBot() {
 			handleMessageSubmit();
 		}
 	};
+
+	if (!isLoaded) {
+		return (
+			<div className="flex justify-center items-center h-full">
+				<Spin size="large" />
+			</div>
+		);
+	}
 
 	return (
 		<>

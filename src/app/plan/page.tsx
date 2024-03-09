@@ -1,45 +1,55 @@
 "use client";
 
-import { Button, Form, Modal, Table } from "@douyinfe/semi-ui";
+import { Button, Form, Modal, Spin, Table } from "@douyinfe/semi-ui";
 import Container from "@/components/container";
 import { IconMore } from "@douyinfe/semi-icons";
-import { useRef, useState, type LegacyRef } from "react";
+import { useMemo, useRef, useState } from "react";
+import { usePlans } from "@/hooks/useSWR/usePlans";
+import { useAuth } from "@clerk/nextjs";
+import { useCreatePlan } from "@/hooks/useSWRMutate/useCreatePlan";
 
 export default function Org() {
+	const { userId, isLoaded } = useAuth();
+	const { plans, isPlansLoading } = usePlans();
+	const { createPlan } = useCreatePlan();
 	const [visible, setVisible] = useState(false);
 	const formRef = useRef<any>(null);
+	const scroll = useMemo(() => ({ y: 500 }), []);
 
 	const showDialog = () => {
 		setVisible(true);
 	};
-	const handleOk = () => {
-		setVisible(false);
-		const formContent = formRef.current.formApi.getValues();
 
-		console.log(formContent);
+	const handleCreatePlan = async () => {
+		setVisible(false);
+		const formValues = formRef.current.formApi.getValues();
+		console.log(formValues);
+
+		await createPlan({ ...formValues, owner: userId });
 	};
+
 	const handleCancel = () => {
 		setVisible(false);
 	};
+
 	const handleAfterClose = () => {};
 
 	const columns = [
 		{
 			title: "目标",
 			dataIndex: "target",
-			render: (text: string) => {
-				return <div>{text}</div>;
-			},
 		},
 		{
 			title: "内容",
 			dataIndex: "content",
-			render: (text: string) => {
-				return <div>{text}</div>;
-			},
 		},
 		{
-			title: "截止时间",
+			title: "阶段性结果",
+			dataIndex: "key_result",
+		},
+		{
+			title: "截止至",
+			dataIndex: "deadline",
 		},
 		{
 			title: "创建者",
@@ -49,12 +59,12 @@ export default function Org() {
 			},
 		},
 		{
-			title: "更新日期",
-			dataIndex: "updateTime",
+			title: "更新于",
+			dataIndex: "updated_at",
 		},
 		{
-			title: "创建日期",
-			dataIndex: "updateTime",
+			title: "创建于",
+			dataIndex: "created_at",
 		},
 		{
 			title: "",
@@ -64,33 +74,29 @@ export default function Org() {
 			},
 		},
 	];
-	const data = [
-		{
-			key: "1",
-			name: "Semi Design 设计稿.fig",
-			nameIconSrc:
-				"https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/figma-icon.png",
-			size: "2M",
-			owner: "姜鹏志",
-			updateTime: "2020-02-02 05:13",
-			avatarBg: "grey",
-		},
-	];
 
-	const handleCreatePlan = () => {};
+	if (!isLoaded || isPlansLoading) {
+		return (
+			<div className="flex justify-center items-center h-full">
+				<Spin size="large" />
+			</div>
+		);
+	}
 
 	return (
 		<main className="px-16 py-4">
 			<Container>
-				<Button onClick={showDialog} className="float-right mb-2">
+				<Button onClick={showDialog} className="float-right mb-2 bg-slate-200">
 					新建计划
 				</Button>
-				<Table columns={columns} dataSource={data} pagination={false} />
+				{plans && (
+					<Table columns={columns} dataSource={plans} scroll={scroll} />
+				)}
 			</Container>
 			<Modal
 				title="计划内容"
 				visible={visible}
-				onOk={handleOk}
+				onOk={handleCreatePlan}
 				afterClose={handleAfterClose} //>=1.16.0
 				onCancel={handleCancel}
 				okButtonProps={{ theme: "light" }}
@@ -105,26 +111,14 @@ export default function Org() {
 						style={{ width: 350 }}
 					/>
 					<Form.Select field="content" label="内容" style={{ width: 350 }}>
-						<Form.Select.Option value="word">单词</Form.Select.Option>
-						<Form.Select.Option value="grammar">语法</Form.Select.Option>
-						<Form.Select.Option value="writing">写作</Form.Select.Option>
-						<Form.Select.Option value="read">阅读</Form.Select.Option>
+						<Form.Select.Option value="单词">单词</Form.Select.Option>
+						<Form.Select.Option value="语法">语法</Form.Select.Option>
+						<Form.Select.Option value="写作">写作</Form.Select.Option>
+						<Form.Select.Option value="阅读">阅读</Form.Select.Option>
 					</Form.Select>
 					<Form.Input
-						field="key-result"
-						label="阶段性结果 1"
-						trigger="blur"
-						style={{ width: 350 }}
-					/>
-					<Form.Input
-						field="key-result"
-						label="阶段性结果 2"
-						trigger="blur"
-						style={{ width: 350 }}
-					/>
-					<Form.Input
-						field="key-result"
-						label="阶段性结果 3"
+						field="key_result"
+						label="阶段性结果"
 						trigger="blur"
 						style={{ width: 350 }}
 					/>
