@@ -8,7 +8,7 @@ import { usePlans } from "@/hooks/useSWR/usePlans";
 import { useAuth } from "@clerk/nextjs";
 import { useCreatePlan } from "@/hooks/useSWRMutate/useCreatePlan";
 
-export default function Org() {
+export default function Plan() {
 	const { userId, isLoaded } = useAuth();
 	const { plans, isPlansLoading } = usePlans();
 	const { createPlan } = useCreatePlan();

@@ -15,6 +15,7 @@ import {
 	IconHelpCircle,
 	IconHome,
 	IconCalendarClock,
+	IconEdit,
 } from "@douyinfe/semi-icons";
 import { UserButton } from "@clerk/nextjs";
 import ".././css/globals.css";
@@ -81,6 +82,12 @@ export default function RootLayout({
 										itemKey={"plan"}
 										text={"制定计划"}
 										icon={<IconCalendarClock />}
+									/>
+									<Nav.Item
+										link="/mock-exam"
+										itemKey={"mock-exam"}
+										text={"模拟考试"}
+										icon={<IconEdit />}
 									/>
 									<Nav.Footer collapseButton={true} />
 								</Nav>

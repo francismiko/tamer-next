@@ -132,7 +132,7 @@ export default function ChatBot() {
 					</div>
 				)}
 			</main>
-			<footer className="h-[10%] w-full flex justify-center items-center">
+			<footer className="h-[10%] w-full flex justify-center">
 				<Input
 					value={inputValue}
 					onChange={(value) => setInputValue(value)}
@@ -146,7 +146,7 @@ export default function ChatBot() {
 					}
 					size="large"
 					showClear
-					className="w-3/5 border-1 border-slate-400 hover:border-slate-700"
+					className="w-1/2 border-1 border-slate-400 hover:border-slate-700"
 				/>
 			</footer>
 		</>
