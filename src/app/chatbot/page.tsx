@@ -1,11 +1,12 @@
 "use client";
 
-import { Input, Spin } from "@douyinfe/semi-ui";
+import { Empty, Input, Spin } from "@douyinfe/semi-ui";
 import { IconLink, IconSend } from "@douyinfe/semi-icons";
-import { useReducer, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StringOutputParser } from "langchain/schema/output_parser";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { useAuth } from "@clerk/nextjs";
+import { IllustrationNoContent } from "@douyinfe/semi-illustrations";
 
 type Message = {
 	text: string;
@@ -15,6 +16,7 @@ type Message = {
 export default function ChatBot() {
 	const { isLoaded } = useAuth();
 	const [inputValue, setInputValue] = useState("");
+	const [isPendding, setIsPendding] = useState(false);
 	const mesgsRef = useRef<Message[]>([]);
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const [, forceUpdate] = useState(1);
@@ -60,6 +62,7 @@ export default function ChatBot() {
 			{ text: userMessage, sender: "user" },
 			{ text: "", sender: "assistant" },
 		];
+		setIsPendding(true);
 		setInputValue("");
 
 		const parser = new StringOutputParser();
@@ -72,6 +75,7 @@ export default function ChatBot() {
 			["human", userMessage],
 		]);
 
+		setIsPendding(false);
 		await typewriterQueue(mesgsRef, stream, 20);
 	};
 
@@ -80,6 +84,11 @@ export default function ChatBot() {
 			handleMessageSubmit();
 		}
 	};
+
+	useEffect(() => {
+		if (!scrollRef.current) return;
+		scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+	}, []); // Remove mesgsRef.current from the dependency array
 
 	if (!isLoaded) {
 		return (
@@ -92,19 +101,36 @@ export default function ChatBot() {
 	return (
 		<>
 			<main ref={scrollRef} className="h-[90%] overflow-y-scroll">
-				{mesgsRef.current.map(({ sender, text }) => (
-					<div className="px-64 grid">
-						<div
-							className={`inline-block px-4 py-4 mt-4 rounded-md ${
-								sender === "user"
-									? "bg-slate-100 justify-self-end"
-									: "bg-purple-100 justify-self-start"
-							}`}
-						>
-							<span>{text}</span>
+				{mesgsRef.current.length !== 0 ? (
+					mesgsRef.current.map(({ sender, text }, index) => (
+						<div className="px-64 grid">
+							<div
+								className={`inline-block px-4 py-4 mt-4 rounded-md ${
+									sender === "user"
+										? "bg-slate-100 justify-self-end"
+										: "bg-purple-100 justify-self-start"
+								}`}
+							>
+								<span>
+									{isPendding && mesgsRef.current.length - 1 === index ? (
+										<Spin />
+									) : (
+										text
+									)}
+								</span>
+							</div>
 						</div>
+					))
+				) : (
+					<div className="flex justify-center items-center h-full">
+						<Empty
+							image={
+								<IllustrationNoContent style={{ width: 250, height: 250 }} />
+							}
+							description={"开启你的英语自学之路"}
+						/>
 					</div>
-				))}
+				)}
 			</main>
 			<footer className="h-[10%] w-full flex justify-center items-center">
 				<Input
