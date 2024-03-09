@@ -7,6 +7,7 @@ import { StringOutputParser } from "langchain/schema/output_parser";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { useAuth } from "@clerk/nextjs";
 import { IllustrationNoContent } from "@douyinfe/semi-illustrations";
+import Markdown from "react-markdown";
 
 type Message = {
 	text: string;
@@ -71,7 +72,7 @@ export default function ChatBot() {
 			temperature: 0.7,
 		});
 		const stream = await model.pipe(parser).stream([
-			["system", "你是个助手"],
+			["system", "你是个英语学习助手"],
 			["human", userMessage],
 		]);
 
@@ -115,7 +116,7 @@ export default function ChatBot() {
 									{isPendding && mesgsRef.current.length - 1 === index ? (
 										<Spin />
 									) : (
-										text
+										<Markdown>{text}</Markdown>
 									)}
 								</span>
 							</div>

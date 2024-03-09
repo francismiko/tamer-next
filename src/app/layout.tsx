@@ -63,7 +63,7 @@ export default function RootLayout({
 										logo={
 											<IconSemiLogo style={{ height: "36px", fontSize: 36 }} />
 										}
-										text={"Semi 运营后台"}
+										text={"Tamer 英语自学"}
 									/>
 									<Nav.Item
 										link="/"
