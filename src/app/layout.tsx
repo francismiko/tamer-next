@@ -10,7 +10,7 @@ import {
 	IconHome,
 } from "@douyinfe/semi-icons";
 import { UserButton } from "@clerk/nextjs";
-import "./globals.css";
+import ".././css/globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -58,6 +58,7 @@ export default function RootLayout({
 									itemKey={"chatbot"}
 									text={"AI 问答"}
 								/>
+								<Nav.Item link="/org" itemKey={"org"} text={"组织"} />
 								<Nav.Footer collapseButton={true} />
 							</Nav>
 						</Sider>
