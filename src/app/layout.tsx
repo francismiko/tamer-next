@@ -1,7 +1,13 @@
 "use client";
 
 import { Inter } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
+import {
+	ClerkProvider,
+	OrganizationSwitcher,
+	SignInButton,
+	SignedIn,
+	SignedOut,
+} from "@clerk/nextjs";
 import { Layout, Nav, Button } from "@douyinfe/semi-ui";
 import {
 	IconSemiLogo,
@@ -20,6 +26,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const { Header, Sider, Content } = Layout;
+
 	return (
 		<ClerkProvider>
 			<html lang="en">
@@ -58,7 +65,7 @@ export default function RootLayout({
 									itemKey={"chatbot"}
 									text={"AI 问答"}
 								/>
-								<Nav.Item link="/org" itemKey={"org"} text={"组织"} />
+								<Nav.Item link="/plan" itemKey={"plan"} text={"制定计划"} />
 								<Nav.Footer collapseButton={true} />
 							</Nav>
 						</Sider>
@@ -84,7 +91,13 @@ export default function RootLayout({
 													marginRight: "12px",
 												}}
 											/>
-											<UserButton />
+											<OrganizationSwitcher />
+											<SignedIn>
+												<UserButton />
+											</SignedIn>
+											<SignedOut>
+												<SignInButton />
+											</SignedOut>
 										</>
 									}
 								/>

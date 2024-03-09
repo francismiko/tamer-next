@@ -8,6 +8,15 @@ const nextConfig = {
 	env: {
 		openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
 	},
+	async redirects() {
+		return [
+			{
+				source: "/signin",
+				destination: "/",
+				permanent: true,
+			},
+		];
+	},
 };
 
 export default nextConfig;
