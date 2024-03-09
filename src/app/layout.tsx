@@ -17,6 +17,7 @@ import {
 	IconCalendarClock,
 	IconEdit,
 	IconArticle,
+	IconUserGroup,
 } from "@douyinfe/semi-icons";
 import { UserButton } from "@clerk/nextjs";
 import ".././css/globals.css";
@@ -98,6 +99,12 @@ export default function RootLayout({
 										<Nav.Item itemKey={"personal"} text={"个人空间"} />
 										<Nav.Item itemKey={"shared"} text={"共享空间"} />
 									</Nav.Sub>
+									<Nav.Item
+										link="/discussion"
+										itemKey={"discussion"}
+										text={"讨论组"}
+										icon={<IconUserGroup />}
+									/>
 									<Nav.Footer collapseButton={true} />
 								</Nav>
 							</Sider>
