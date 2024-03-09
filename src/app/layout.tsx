@@ -106,16 +106,14 @@ export default function RootLayout({
 										text={"讨论组"}
 										icon={<IconUserGroup />}
 									/>
-									<Nav.Footer
-										children={
-											<Nav.Item
-												link="/setting"
-												itemKey={"setting"}
-												text={"设置"}
-												icon={<IconSetting />}
-											/>
-										}
-									/>
+									<Nav.Footer>
+										<Nav.Item
+											link="/setting"
+											itemKey={"setting"}
+											text={"设置"}
+											icon={<IconSetting />}
+										/>
+									</Nav.Footer>
 									<Nav.Footer collapseButton={true} />
 								</Nav>
 							</Sider>
