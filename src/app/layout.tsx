@@ -14,10 +14,12 @@ import {
 	IconBell,
 	IconHelpCircle,
 	IconHome,
+	IconCalendarClock,
 } from "@douyinfe/semi-icons";
 import { UserButton } from "@clerk/nextjs";
 import ".././css/globals.css";
 import { SWRConfig } from "swr";
+import { LogosOpenaiIcon } from "@/components/icons/openai";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -72,8 +74,14 @@ export default function RootLayout({
 										link="/chatbot"
 										itemKey={"chatbot"}
 										text={"AI 问答"}
+										icon={<LogosOpenaiIcon />}
 									/>
-									<Nav.Item link="/plan" itemKey={"plan"} text={"制定计划"} />
+									<Nav.Item
+										link="/plan"
+										itemKey={"plan"}
+										text={"制定计划"}
+										icon={<IconCalendarClock />}
+									/>
 									<Nav.Footer collapseButton={true} />
 								</Nav>
 							</Sider>
