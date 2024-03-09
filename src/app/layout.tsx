@@ -53,8 +53,8 @@ export default function RootLayout({
 							>
 								<Nav
 									style={{ height: "100%" }}
-									onSelect={(data) => console.log("trigger onSelect: ", data)}
-									onClick={(data) => console.log("trigger onClick: ", data)}
+									onSelect={() => {}}
+									onClick={() => {}}
 								>
 									<Nav.Header
 										logo={

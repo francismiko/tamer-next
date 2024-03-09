@@ -23,7 +23,6 @@ export default function Org() {
 	const handleCreatePlan = async () => {
 		setVisible(false);
 		const formValues = formRef.current.formApi.getValues();
-		console.log(formValues);
 
 		await createPlan({ ...formValues, owner: userId });
 	};
