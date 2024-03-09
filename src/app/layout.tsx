@@ -7,6 +7,7 @@ import {
 	SignInButton,
 	SignedIn,
 	SignedOut,
+	UserButton,
 } from "@clerk/nextjs";
 import { Layout, Nav, Button } from "@douyinfe/semi-ui";
 import {
@@ -20,7 +21,6 @@ import {
 	IconUserGroup,
 	IconSetting,
 } from "@douyinfe/semi-icons";
-import { UserButton } from "@clerk/nextjs";
 import ".././css/globals.css";
 import { SWRConfig } from "swr";
 import { LogosOpenaiIcon } from "@/components/icons/openai";
