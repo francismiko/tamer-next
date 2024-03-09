@@ -69,15 +69,18 @@ export default function ChatBot() {
 		const parser = new StringOutputParser();
 		const model = new ChatOpenAI({
 			openAIApiKey: process.env.openAIApiKey,
-			temperature: 0.7,
+			temperature: 0.9,
 		});
 		const stream = await model.pipe(parser).stream([
-			["system", "你是个英语学习助手"],
+			[
+				"system",
+				"你是个英语学习助手, 负责用热情的态度去回答用户问题或对题目进行批改解答, 要求:使用markdown格式化输出内容",
+			],
 			["human", userMessage],
 		]);
 
 		setIsPendding(false);
-		await typewriterQueue(mesgsRef, stream, 20);
+		await typewriterQueue(mesgsRef, stream, 10);
 	};
 
 	const handleKeyPress = (event: { key: string }) => {
