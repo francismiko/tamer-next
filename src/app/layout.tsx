@@ -18,6 +18,7 @@ import {
 	IconEdit,
 	IconArticle,
 	IconUserGroup,
+	IconSetting,
 } from "@douyinfe/semi-icons";
 import { UserButton } from "@clerk/nextjs";
 import ".././css/globals.css";
@@ -105,6 +106,16 @@ export default function RootLayout({
 										text={"讨论组"}
 										icon={<IconUserGroup />}
 									/>
+									<Nav.Footer
+										children={
+											<Nav.Item
+												link="/setting"
+												itemKey={"setting"}
+												text={"设置"}
+												icon={<IconSetting />}
+											/>
+										}
+									/>
 									<Nav.Footer collapseButton={true} />
 								</Nav>
 							</Sider>
@@ -131,6 +142,7 @@ export default function RootLayout({
 													}}
 												/>
 												<OrganizationSwitcher />
+												<div className="mr-4" />
 												<SignedIn>
 													<UserButton />
 												</SignedIn>
