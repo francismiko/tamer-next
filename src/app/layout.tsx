@@ -16,6 +16,7 @@ import {
 	IconHome,
 	IconCalendarClock,
 	IconEdit,
+	IconArticle,
 } from "@douyinfe/semi-icons";
 import { UserButton } from "@clerk/nextjs";
 import ".././css/globals.css";
@@ -89,6 +90,14 @@ export default function RootLayout({
 										text={"模拟考试"}
 										icon={<IconEdit />}
 									/>
+									<Nav.Sub
+										itemKey={"material"}
+										text="学习资料"
+										icon={<IconArticle />}
+									>
+										<Nav.Item itemKey={"personal"} text={"个人空间"} />
+										<Nav.Item itemKey={"shared"} text={"共享空间"} />
+									</Nav.Sub>
 									<Nav.Footer collapseButton={true} />
 								</Nav>
 							</Sider>

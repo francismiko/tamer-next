@@ -3,7 +3,7 @@
 import { useAuth } from "@clerk/nextjs";
 import { Spin } from "@douyinfe/semi-ui";
 
-export default function MockExam() {
+export default function Personal() {
 	const { isLoaded } = useAuth();
 	if (!isLoaded) {
 		return (
