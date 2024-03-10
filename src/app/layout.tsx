@@ -97,8 +97,16 @@ export default function RootLayout({
 										text="学习资料"
 										icon={<IconArticle />}
 									>
-										<Nav.Item itemKey={"personal"} text={"个人空间"} />
-										<Nav.Item itemKey={"shared"} text={"共享空间"} />
+										<Nav.Item
+											link="/material/personal"
+											itemKey={"personal"}
+											text={"个人空间"}
+										/>
+										<Nav.Item
+											link="/material/shared"
+											itemKey={"shared"}
+											text={"共享空间"}
+										/>
 									</Nav.Sub>
 									<Nav.Item
 										link="/discussion"

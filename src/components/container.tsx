@@ -1,6 +1,11 @@
-const Container = ({ children }: { children: React.ReactNode }) => {
+const Container = ({
+	children,
+	className,
+}: { children: React.ReactNode; className?: string }) => {
 	return (
-		<div className="rounded-xl py-4 px-8 outline-1 outline">{children}</div>
+		<div className={`rounded-xl py-4 px-8 outline-1 outline ${className}`}>
+			{children}
+		</div>
 	);
 };
 
