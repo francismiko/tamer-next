@@ -150,7 +150,7 @@ export default function ChatBot() {
 					}
 					size="large"
 					showClear
-					className="w-1/2 border-1 border-slate-400 hover:border-slate-700"
+					className="w-1/2 rounded-full border-1 border-slate-400 hover:border-slate-700"
 				/>
 			</footer>
 		</>
