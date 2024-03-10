@@ -1,9 +1,12 @@
 "use client";
 
+import Container from "@/components/container";
 import { useAuth } from "@clerk/nextjs";
-import { Spin } from "@douyinfe/semi-ui";
+import { Button, Spin } from "@douyinfe/semi-ui";
+import { IconPlus } from "@douyinfe/semi-icons";
 
 export default function MockExam() {
+	const exam = "";
 	const { isLoaded } = useAuth();
 	if (!isLoaded) {
 		return (
@@ -13,5 +16,17 @@ export default function MockExam() {
 		);
 	}
 
-	return <></>;
+	return (
+		<main className="px-16 py-8 h-full">
+			<Container className="h-full overflow-y-scroll">
+				{exam ? (
+					"123"
+				) : (
+					<Button icon={<IconPlus />} iconPosition="right">
+						生成试卷
+					</Button>
+				)}
+			</Container>
+		</main>
+	);
 }
