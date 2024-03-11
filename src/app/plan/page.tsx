@@ -19,18 +19,20 @@ import {
 } from "@douyinfe/semi-icons";
 import { useMemo, useRef, useState } from "react";
 import { usePlans } from "@/hooks/useSWR/usePlans";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { useCreatePlan } from "@/hooks/useSWRMutate/useCreatePlan";
 import { useSWRConfig } from "swr";
 import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Image from "next/image";
 
 dayjs.locale("zh-cn");
 dayjs.extend(relativeTime);
 
 export default function Plan() {
 	const { userId, isLoaded } = useAuth();
+	const { user } = useUser();
 	const { mutate } = useSWRConfig();
 	const { plans, isPlansLoading } = usePlans();
 	const { createPlan } = useCreatePlan();
@@ -145,8 +147,16 @@ export default function Plan() {
 		{
 			title: "创建者",
 			dataIndex: "owner",
-			render: (text: string) => {
-				return <div>{text}</div>;
+			render: () => {
+				return (
+					<Image
+						src={user?.imageUrl ?? ""}
+						width={40}
+						height={40}
+						alt=""
+						className="rounded"
+					/>
+				);
 			},
 		},
 		{
