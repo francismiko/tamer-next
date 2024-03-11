@@ -49,8 +49,6 @@ export default function Plan() {
 		setVisible(false);
 	};
 
-	const handleAfterClose = () => {};
-
 	const handleDeletePlan = async (id: string) => {
 		try {
 			await fetch(`/api/plan?id=${id}`, { method: "DELETE" });
@@ -59,6 +57,62 @@ export default function Plan() {
 			Toast.success({ content: "删除成功" });
 		} catch (e) {
 			Toast.error({ content: "删除失败" });
+		}
+	};
+
+	const handleSetStar = async (id: string) => {
+		try {
+			await fetch(`/api/plan?id=${id}`, {
+				method: "PUT",
+				body: JSON.stringify({ is_star: true }),
+			});
+
+			mutate("/api/plan");
+			Toast.success({ content: "收藏成功" });
+		} catch (e) {
+			Toast.error({ content: "收藏失败" });
+		}
+	};
+
+	const handleSetDone = async (id: string) => {
+		try {
+			await fetch(`/api/plan?id=${id}`, {
+				method: "PUT",
+				body: JSON.stringify({ is_done: true }),
+			});
+
+			mutate("/api/plan");
+			Toast.success({ content: "标记完成成功" });
+		} catch (e) {
+			Toast.error({ content: "标记完成失败" });
+		}
+	};
+
+	const handleCancelStar = async (id: string) => {
+		try {
+			await fetch(`/api/plan?id=${id}`, {
+				method: "PUT",
+				body: JSON.stringify({ is_star: false }),
+			});
+
+			mutate("/api/plan");
+			Toast.success({ content: "取消收藏成功" });
+		} catch (e) {
+			Toast.error({ content: "取消收藏失败" });
+		}
+	};
+
+	const handleCancelDone = async (id: string) => {
+		try {
+			await fetch(`/api/plan?id=${id}`, {
+				method: "PUT",
+				body: JSON.stringify({ is_done: false }),
+			});
+
+			mutate("/api/plan");
+			Toast.success({ content: "取消完成标记成功" });
+		} catch (e) {
+			Toast.error({ content: "取消完成标记失败" });
 		}
 	};
 
@@ -97,14 +151,22 @@ export default function Plan() {
 		{
 			title: "收藏",
 			dataIndex: "is_star",
+			render: (_: any, record: any) => {
+				return record.is_star && <IconStar />;
+			},
 		},
 		{
 			title: "已完成",
 			dataIndex: "is_done",
+			align: "center",
+			render: (_: any, record: any) => {
+				return record.is_done && <IconVerify />;
+			},
 		},
 		{
 			title: "",
 			dataIndex: "operate",
+			align: "center",
 			render: (_: any, record: any) => {
 				return (
 					<Dropdown
@@ -112,8 +174,26 @@ export default function Plan() {
 						position="topLeft"
 						render={
 							<Dropdown.Menu>
-								<Dropdown.Item icon={<IconStar />}>收藏</Dropdown.Item>
-								<Dropdown.Item icon={<IconVerify />}>完成</Dropdown.Item>
+								<Dropdown.Item
+									icon={<IconStar />}
+									onClick={
+										!record.is_star
+											? () => handleSetStar(record.id.toString())
+											: () => handleCancelStar(record.id.toString())
+									}
+								>
+									收藏
+								</Dropdown.Item>
+								<Dropdown.Item
+									icon={<IconVerify />}
+									onClick={
+										!record.is_done
+											? () => handleSetDone(record.id.toString())
+											: () => handleCancelDone(record.id.toString())
+									}
+								>
+									标记完成
+								</Dropdown.Item>
 								<Dropdown.Item icon={<IconEdit />}>修改</Dropdown.Item>
 								<Dropdown.Item
 									icon={<IconDelete />}
@@ -154,7 +234,6 @@ export default function Plan() {
 				title="计划内容"
 				visible={visible}
 				onOk={handleCreatePlan}
-				afterClose={handleAfterClose} //>=1.16.0
 				onCancel={handleCancel}
 				okButtonProps={{ theme: "light" }}
 				okText={"提交"}

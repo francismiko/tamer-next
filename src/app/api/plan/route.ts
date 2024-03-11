@@ -12,12 +12,12 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-	const json = await req.json();
+	const body = await req.json();
 
 	try {
 		const plan = await prisma.plan.create({
 			data: {
-				...json,
+				...body,
 			},
 		});
 
@@ -35,6 +35,24 @@ export async function DELETE(req: Request) {
 	try {
 		const deletePlan = await prisma.plan.delete({
 			where: { id: Number(id) },
+		});
+
+		return Response.json({ status: "ok", data: deletePlan });
+	} catch (e: any) {
+		console.log(e);
+		return Response.json({ status: "error", message: e.message });
+	}
+}
+
+export async function PUT(req: Request) {
+	const body = await req.json();
+	const { searchParams } = new URL(req.url);
+	const id = searchParams.get("id");
+
+	try {
+		const deletePlan = await prisma.plan.update({
+			where: { id: Number(id) },
+			data: { ...body },
 		});
 
 		return Response.json({ status: "ok", data: deletePlan });
