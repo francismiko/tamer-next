@@ -1,15 +1,31 @@
 "use client";
 
-import { Button, Form, Modal, Spin, Table } from "@douyinfe/semi-ui";
+import {
+	Button,
+	Dropdown,
+	Form,
+	Modal,
+	Spin,
+	Table,
+	Toast,
+} from "@douyinfe/semi-ui";
 import Container from "@/components/container";
-import { IconMore } from "@douyinfe/semi-icons";
+import {
+	IconMore,
+	IconDelete,
+	IconStar,
+	IconVerify,
+	IconEdit,
+} from "@douyinfe/semi-icons";
 import { useMemo, useRef, useState } from "react";
 import { usePlans } from "@/hooks/useSWR/usePlans";
 import { useAuth } from "@clerk/nextjs";
 import { useCreatePlan } from "@/hooks/useSWRMutate/useCreatePlan";
+import { useSWRConfig } from "swr";
 
 export default function Plan() {
 	const { userId, isLoaded } = useAuth();
+	const { mutate } = useSWRConfig();
 	const { plans, isPlansLoading } = usePlans();
 	const { createPlan } = useCreatePlan();
 	const [visible, setVisible] = useState(false);
@@ -23,8 +39,10 @@ export default function Plan() {
 	const handleCreatePlan = async () => {
 		setVisible(false);
 		const formValues = formRef.current.formApi.getValues();
-
 		await createPlan({ ...formValues, owner: userId });
+
+		mutate("/api/plan");
+		Toast.success({ content: "新建成功" });
 	};
 
 	const handleCancel = () => {
@@ -32,6 +50,17 @@ export default function Plan() {
 	};
 
 	const handleAfterClose = () => {};
+
+	const handleDeletePlan = async (id: string) => {
+		try {
+			await fetch(`/api/plan?id=${id}`, { method: "DELETE" });
+
+			mutate("/api/plan");
+			Toast.success({ content: "删除成功" });
+		} catch (e) {
+			Toast.error({ content: "删除失败" });
+		}
+	};
 
 	const columns = [
 		{
@@ -66,10 +95,39 @@ export default function Plan() {
 			dataIndex: "created_at",
 		},
 		{
+			title: "收藏",
+			dataIndex: "is_star",
+		},
+		{
+			title: "已完成",
+			dataIndex: "is_done",
+		},
+		{
 			title: "",
 			dataIndex: "operate",
-			render: () => {
-				return <IconMore />;
+			render: (_: any, record: any) => {
+				return (
+					<Dropdown
+						trigger="hover"
+						position="topLeft"
+						render={
+							<Dropdown.Menu>
+								<Dropdown.Item icon={<IconStar />}>收藏</Dropdown.Item>
+								<Dropdown.Item icon={<IconVerify />}>完成</Dropdown.Item>
+								<Dropdown.Item icon={<IconEdit />}>修改</Dropdown.Item>
+								<Dropdown.Item
+									icon={<IconDelete />}
+									onClick={() => handleDeletePlan(record.id.toString())}
+									type="danger"
+								>
+									删除
+								</Dropdown.Item>
+							</Dropdown.Menu>
+						}
+					>
+						<IconMore>始终展示</IconMore>
+					</Dropdown>
+				);
 			},
 		},
 	];

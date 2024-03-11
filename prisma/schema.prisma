@@ -22,5 +22,7 @@ model Plan {
   target     String?
   content    String?
   key_result String?
+  is_done    Boolean   @default(false)
+  is_star    Boolean   @default(false)
   deadline   DateTime?
 }
