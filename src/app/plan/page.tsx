@@ -152,21 +152,19 @@ export default function Plan() {
 			title: "收藏",
 			dataIndex: "is_star",
 			render: (_: any, record: any) => {
-				return record.is_star && <IconStar />;
+				return record.is_star && <IconStar className="text-yellow-400" />;
 			},
 		},
 		{
 			title: "已完成",
 			dataIndex: "is_done",
-			align: "center",
 			render: (_: any, record: any) => {
-				return record.is_done && <IconVerify />;
+				return record.is_done && <IconVerify className="text-green-500" />;
 			},
 		},
 		{
 			title: "",
 			dataIndex: "operate",
-			align: "center",
 			render: (_: any, record: any) => {
 				return (
 					<Dropdown
