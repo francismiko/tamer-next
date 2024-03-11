@@ -22,6 +22,12 @@ import { usePlans } from "@/hooks/useSWR/usePlans";
 import { useAuth } from "@clerk/nextjs";
 import { useCreatePlan } from "@/hooks/useSWRMutate/useCreatePlan";
 import { useSWRConfig } from "swr";
+import dayjs from "dayjs";
+import "dayjs/locale/zh-cn";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.locale("zh-cn");
+dayjs.extend(relativeTime);
 
 export default function Plan() {
 	const { userId, isLoaded } = useAuth();
@@ -132,6 +138,9 @@ export default function Plan() {
 		{
 			title: "截止至",
 			dataIndex: "deadline",
+			render: (text: string) => {
+				return <div>{dayjs(text).format("YYYY/M/D")}</div>;
+			},
 		},
 		{
 			title: "创建者",
@@ -143,10 +152,16 @@ export default function Plan() {
 		{
 			title: "更新于",
 			dataIndex: "updated_at",
+			render: (text: string) => {
+				return <div>{dayjs(text).fromNow()}</div>;
+			},
 		},
 		{
 			title: "创建于",
 			dataIndex: "created_at",
+			render: (text: string) => {
+				return <div>{dayjs(text).fromNow()}</div>;
+			},
 		},
 		{
 			title: "收藏",
