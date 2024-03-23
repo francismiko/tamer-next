@@ -17,7 +17,9 @@ import { useMessagesByOwner } from "@/hooks/useSWR/useMessagesByOwner";
 export default function ChatBot() {
 	const { isLoaded, userId } = useAuth();
 	const { upsertChat } = useUpsertChat();
-	const { messages } = useMessagesByOwner({ userId: userId as string });
+	const { messages, isMessagesLoading } = useMessagesByOwner({
+		userId: userId as string,
+	});
 	const [inputValue, setInputValue] = useState("");
 	const [isPendding, setIsPendding] = useState(false);
 	const mesgsRef = useRef<Message[]>([]);
@@ -115,15 +117,16 @@ export default function ChatBot() {
 
 	useEffect(() => {
 		if (!scrollRef.current) return;
+		scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
 
+		if (!messages) return;
 		mesgsRef.current = messages?.map((message) => ({
 			text: message.text,
 			sender: message.sender,
 		})) as Message[];
-		scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
 	}, [messages]);
 
-	if (!isLoaded) {
+	if (!isLoaded && isMessagesLoading) {
 		return (
 			<div className="flex justify-center items-center h-full">
 				<Spin size="large" />
@@ -134,8 +137,8 @@ export default function ChatBot() {
 	return (
 		<>
 			<main ref={scrollRef} className="h-[90%] overflow-y-scroll">
-				{mesgsRef.current.length !== 0 ? (
-					mesgsRef.current.map(({ sender, text }, index) => (
+				{mesgsRef?.current?.length !== 0 ? (
+					mesgsRef?.current?.map(({ sender, text }, index) => (
 						<div className="px-64 grid">
 							<div
 								className={`inline-block px-4 py-4 mt-4 rounded-md ${
@@ -145,7 +148,7 @@ export default function ChatBot() {
 								}`}
 							>
 								<span>
-									{isPendding && mesgsRef.current.length - 1 === index ? (
+									{isPendding && mesgsRef?.current?.length - 1 === index ? (
 										<Spin />
 									) : (
 										<Markdown>{text}</Markdown>
