@@ -2,7 +2,7 @@ import type { Plan as _Plan } from "@prisma/client";
 import useSWR from "swr";
 
 export const usePlans = (): {
-	plans: _Plan[] | undefined;
+	plans?: _Plan[];
 	isPlansLoading: boolean;
 	isPlansError: Error;
 } => {

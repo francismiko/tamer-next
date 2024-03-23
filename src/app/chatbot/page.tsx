@@ -12,10 +12,12 @@ import {
 	useUpsertChat,
 	type Message,
 } from "@/hooks/useSWRMutate/useUpsertChat";
+import { useMessagesByOwner } from "@/hooks/useSWR/useMessagesByOwner";
 
 export default function ChatBot() {
 	const { isLoaded, userId } = useAuth();
 	const { upsertChat } = useUpsertChat();
+	const { messages } = useMessagesByOwner({ userId: userId as string });
 	const [inputValue, setInputValue] = useState("");
 	const [isPendding, setIsPendding] = useState(false);
 	const mesgsRef = useRef<Message[]>([]);
@@ -113,8 +115,13 @@ export default function ChatBot() {
 
 	useEffect(() => {
 		if (!scrollRef.current) return;
+
+		mesgsRef.current = messages?.map((message) => ({
+			text: message.text,
+			sender: message.sender,
+		})) as Message[];
 		scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-	}, []);
+	}, [messages]);
 
 	if (!isLoaded) {
 		return (
