@@ -30,9 +30,11 @@ export default function ChatBot() {
 		textRef: typeof mesgsRef,
 		stream: AsyncIterable<string>,
 		delay: number,
-	) => {
+	): Promise<string> => {
 		let streamQueue: string[] = [];
 		let isDone = false;
+		let chunkCache = "";
+
 		const typingInterval = setInterval(() => {
 			if (!scrollRef.current) return;
 			scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -49,29 +51,30 @@ export default function ChatBot() {
 		}, delay);
 
 		for await (const chunk of stream) {
+			chunkCache += chunk;
 			streamQueue = streamQueue.concat(chunk.split(""));
 		}
 
 		isDone = true;
 		rerender();
+
+		return chunkCache;
 	};
 
 	const handleMessageSubmit = async () => {
+		if (!userId) return;
 		if (inputValue.trim() === "") return;
+
 		const userMessage = inputValue;
+
 		mesgsRef.current = [
 			...mesgsRef.current,
 			{ text: userMessage, sender: "USER" },
 			{ text: "", sender: "ASSISTANT" },
 		];
+
 		setIsPendding(true);
 		setInputValue("");
-
-		if (!userId) return;
-		await upsertChat({
-			owner: userId,
-			messages: [{ sender: "USER", text: userMessage }],
-		});
 
 		const parser = new StringOutputParser();
 		const model = new ChatOpenAI(
@@ -79,7 +82,7 @@ export default function ChatBot() {
 				openAIApiKey: process.env.openAIApiKey,
 				temperature: 0.9,
 			},
-			{ baseURL: "https://one.aiskt.com/v1" },
+			{ baseURL: process.env.proxyUrl },
 		);
 		const stream = await model.pipe(parser).stream([
 			[
@@ -90,7 +93,16 @@ export default function ChatBot() {
 		]);
 
 		setIsPendding(false);
-		await typewriterQueue(mesgsRef, stream, 10);
+
+		const assistantMessage = await typewriterQueue(mesgsRef, stream, 10);
+
+		await upsertChat({
+			owner: userId,
+			messages: [
+				{ sender: "USER", text: userMessage },
+				{ sender: "ASSISTANT", text: assistantMessage },
+			],
+		});
 	};
 
 	const handleKeyPress = (event: { key: string }) => {

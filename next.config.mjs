@@ -7,6 +7,7 @@ const nextConfig = {
 	],
 	env: {
 		openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+		proxyUrl: process.env.NEXT_PUBLIC_OPENAI_PROXY_URL,
 	},
 	async redirects() {
 		return [
