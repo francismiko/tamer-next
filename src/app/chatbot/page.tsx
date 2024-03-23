@@ -129,14 +129,6 @@ export default function ChatBot() {
 		rerender();
 	}, [messages]);
 
-	if (!isLoaded && isMessagesLoading) {
-		return (
-			<div className="flex justify-center items-center h-full">
-				<Spin size="large" />
-			</div>
-		);
-	}
-
 	return (
 		<>
 			<main ref={scrollRef} className="h-[90%] overflow-y-scroll">
