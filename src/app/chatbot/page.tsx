@@ -115,6 +115,7 @@ export default function ChatBot() {
 		}
 	};
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (!scrollRef.current) return;
 		scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -124,6 +125,8 @@ export default function ChatBot() {
 			text: message.text,
 			sender: message.sender,
 		})) as Message[];
+
+		rerender();
 	}, [messages]);
 
 	if (!isLoaded && isMessagesLoading) {
