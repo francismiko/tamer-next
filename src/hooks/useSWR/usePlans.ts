@@ -1,12 +1,12 @@
-import type { Plan } from "@prisma/client";
+import type { Plan as _Plan } from "@prisma/client";
 import useSWR from "swr";
 
 export const usePlans = (): {
-	plans: Plan[] | undefined;
+	plans: _Plan[] | undefined;
 	isPlansLoading: boolean;
 	isPlansError: Error;
 } => {
-	const { data, error, isLoading } = useSWR<Plan[]>("/api/plan"); // Fix: Change the type of useSWR to Plan[]
+	const { data, error, isLoading } = useSWR<_Plan[]>("/api/plan");
 
 	return {
 		plans: data,

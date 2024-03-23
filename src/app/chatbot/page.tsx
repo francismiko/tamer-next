@@ -8,12 +8,10 @@ import { ChatOpenAI } from "langchain/chat_models/openai";
 import { useAuth } from "@clerk/nextjs";
 import { IllustrationNoContent } from "@douyinfe/semi-illustrations";
 import Markdown from "react-markdown";
-import { useUpsertChat } from "@/hooks/useSWRMutate/useUpsertChat";
-
-type Message = {
-	text: string;
-	sender: "user" | "assistant";
-};
+import {
+	useUpsertChat,
+	type Message,
+} from "@/hooks/useSWRMutate/useUpsertChat";
 
 export default function ChatBot() {
 	const { isLoaded, userId } = useAuth();
@@ -40,7 +38,8 @@ export default function ChatBot() {
 			scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
 
 			if (streamQueue.length > 0) {
-				textRef.current[textRef.current.length - 1].text += streamQueue.shift();
+				(textRef.current[textRef.current.length - 1].text as string) +=
+					streamQueue.shift();
 				rerender();
 			}
 
@@ -62,17 +61,26 @@ export default function ChatBot() {
 		const userMessage = inputValue;
 		mesgsRef.current = [
 			...mesgsRef.current,
-			{ text: userMessage, sender: "user" },
-			{ text: "", sender: "assistant" },
+			{ text: userMessage, sender: "USER" },
+			{ text: "", sender: "ASSISTANT" },
 		];
 		setIsPendding(true);
 		setInputValue("");
 
+		if (!userId) return;
+		await upsertChat({
+			owner: userId,
+			messages: [{ sender: "USER", text: userMessage }],
+		});
+
 		const parser = new StringOutputParser();
-		const model = new ChatOpenAI({
-			openAIApiKey: process.env.openAIApiKey,
-			temperature: 0.9,
-		},{baseURL:'https://one.aiskt.com/v1'});
+		const model = new ChatOpenAI(
+			{
+				openAIApiKey: process.env.openAIApiKey,
+				temperature: 0.9,
+			},
+			{ baseURL: "https://one.aiskt.com/v1" },
+		);
 		const stream = await model.pipe(parser).stream([
 			[
 				"system",
@@ -96,11 +104,6 @@ export default function ChatBot() {
 		scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
 	}, []);
 
-	useEffect(() => {
-		if (!userId) return;
-		upsertChat({ owner: userId, messages: mesgsRef.current });
-	}, [userId, upsertChat]);
-
 	if (!isLoaded) {
 		return (
 			<div className="flex justify-center items-center h-full">
@@ -117,7 +120,7 @@ export default function ChatBot() {
 						<div className="px-64 grid">
 							<div
 								className={`inline-block px-4 py-4 mt-4 rounded-md ${
-									sender === "user"
+									sender === "USER"
 										? "bg-slate-100 justify-self-end"
 										: "bg-purple-100 justify-self-start"
 								}`}

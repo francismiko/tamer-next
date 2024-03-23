@@ -1,11 +1,12 @@
+import type { Plan as _Plan } from "@prisma/client";
 import useSWRMutation from "swr/mutation";
 
 export type CreatePlanArg = {
-	owner: string;
-	title?: string;
-	content?: string;
-	key_result?: string;
-	deadline?: Date;
+	owner: _Plan["owner"];
+	target?: _Plan["target"];
+	content?: _Plan["content"];
+	key_result?: _Plan["key_result"];
+	deadline?: _Plan["deadline"];
 };
 
 export const useCreatePlan = (): {

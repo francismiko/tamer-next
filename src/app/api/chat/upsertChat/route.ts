@@ -7,14 +7,13 @@ export async function POST(req: Request) {
 	try {
 		const chat = await prisma.chat.upsert({
 			where: {
-				owner: "body.userId",
+				owner: body.owner,
 			},
 			update: {
-				messages: { create: [{ sender: "ASSISTANT", text: "你" }] },
+				messages: { create: body.messages },
 			},
 			create: {
-				owner: "body.userId",
-				messages: { create: [{ sender: "ASSISTANT", text: "你" }] },
+				owner: body.owner,
 			},
 		});
 

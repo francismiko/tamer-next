@@ -1,13 +1,14 @@
+import type { Chat as _Chat, Message as _Message } from "@prisma/client";
 import useSWRMutation from "swr/mutation";
 
 export type UpsertChatArg = {
-	owner: string;
+	owner: _Chat["owner"];
 	messages?: Message[];
 };
 
-type Message = {
-	sender: "user" | "assistant";
-	text: string;
+export type Message = {
+	sender: _Message["sender"];
+	text: _Message["text"];
 };
 
 export const useUpsertChat = (): {
