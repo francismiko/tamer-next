@@ -16,7 +16,7 @@ export const useUpsertChat = (): {
 	isChatMutating: boolean;
 } => {
 	const { trigger, isMutating } = useSWRMutation(
-		"/api/chat/upsertChat",
+		"/api/chat",
 		async (url: string, { arg }: { arg: UpsertChatArg }) => {
 			await fetch(url, {
 				method: "POST",
