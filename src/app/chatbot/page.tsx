@@ -8,6 +8,7 @@ import { ChatOpenAI } from "langchain/chat_models/openai";
 import { useAuth } from "@clerk/nextjs";
 import { IllustrationNoContent } from "@douyinfe/semi-illustrations";
 import Markdown from "react-markdown";
+import { useUpsertChat } from "@/hooks/useSWRMutate/useUpsertChat";
 
 type Message = {
 	text: string;
@@ -15,7 +16,8 @@ type Message = {
 };
 
 export default function ChatBot() {
-	const { isLoaded } = useAuth();
+	const { isLoaded, userId } = useAuth();
+	const { upsertChat } = useUpsertChat();
 	const [inputValue, setInputValue] = useState("");
 	const [isPendding, setIsPendding] = useState(false);
 	const mesgsRef = useRef<Message[]>([]);
@@ -70,7 +72,7 @@ export default function ChatBot() {
 		const model = new ChatOpenAI({
 			openAIApiKey: process.env.openAIApiKey,
 			temperature: 0.9,
-		});
+		},{baseURL:'https://one.aiskt.com/v1'});
 		const stream = await model.pipe(parser).stream([
 			[
 				"system",
@@ -92,7 +94,12 @@ export default function ChatBot() {
 	useEffect(() => {
 		if (!scrollRef.current) return;
 		scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-	}, []); // Remove mesgsRef.current from the dependency array
+	}, []);
+
+	useEffect(() => {
+		if (!userId) return;
+		upsertChat({ owner: userId, messages: mesgsRef.current });
+	}, [userId, upsertChat]);
 
 	if (!isLoaded) {
 		return (

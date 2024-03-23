@@ -26,3 +26,30 @@ model Plan {
   is_star    Boolean   @default(false)
   deadline   DateTime?
 }
+
+model Chat {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+  owner      String    @unique
+  messages   Message[]
+
+  @@index([owner])
+}
+
+enum Sender {
+  USER
+  ASSISTANT
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  sender     Sender
+  text       String?
+  chat       Chat     @relation(fields: [chatId], references: [id])
+  chatId     Int
+
+  @@index([chatId])
+}
