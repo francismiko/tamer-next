@@ -15,6 +15,8 @@ export default function MockExam() {
 	const [readingPart1, setReadingPart1] = useState<string>("");
 	const [readingPart2, setReadingPart2] = useState<string>("");
 	const [readingPart3, setReadingPart3] = useState<string>("");
+	const [translation, setTranslation] = useState<string>("");
+	const [writing, setWriting] = useState<string>("");
 	const [isEmpty, setIsEmpty] = useState<boolean>(true);
 	const { isLoaded } = useAuth();
 
@@ -23,8 +25,9 @@ export default function MockExam() {
 			const parser = new StringOutputParser();
 			const model = new OpenAI(
 				{
+					modelName: "gpt-3.5-turbo",
 					openAIApiKey: process.env.openAIApiKey,
-					temperature: 0.7,
+					temperature: 0.3,
 				},
 				{ baseURL: process.env.proxyUrl },
 			);
@@ -40,16 +43,17 @@ export default function MockExam() {
 			}
 		};
 
-		const outputFromat = "要求: 使用markdown格式输出, 不要输出答案";
+		const outputFromat =
+			"要求: 使用markdown格式输出, 不要输出答案, 除标题外都用英文";
 		const systemFromat =
-			"你需要帮我模拟在中国的英语升学考试, 模拟题目标题格式和题目内容, 遵循以下要求和标准: \n";
+			"你需要帮我模拟一份中国的英语等级考试, 模拟题目标题格式和题目内容, 遵循以下要求和标准: \n";
 
 		setIsEmpty(false);
 
 		await Promise.all([
 			handleStream(
 				await stream(
-					`${systemFromat}模拟CET-6难度的选择题5个, 前面放个大标题'选择题练习(5 questions, 15 points)', ${outputFromat}`,
+					`${systemFromat}模拟CET-6难度的选择题, 生成5个不同题型的选择题 前面放个大标题'选择题练习(5 questions, 15 points)', ${outputFromat}`,
 				),
 				setSelect,
 			),
@@ -70,6 +74,18 @@ export default function MockExam() {
 					`${systemFromat}模拟CET-6难度的阅读题目, 只需要你生成其中的第三篇即可, 控制阅读时间在10-15分钟, 前面放个标题'Passage 3', ${outputFromat}`,
 				),
 				setReadingPart3,
+			),
+			handleStream(
+				await stream(
+					`${systemFromat}模拟CET-6难度的翻译题目, 生成2个英译中的题目, 3个中译英的题目, 前面放个大标题'翻译练习(5 question, 30 points)', ${outputFromat}`,
+				),
+				setTranslation,
+			),
+			handleStream(
+				await stream(
+					`${systemFromat}模拟CET-6难度的写作题目, 要求词数在250-300之间, 题目描述和要求用英文描述, 题材不限, 前面放个大标题'写作练习(1 question, 25 points)', ${outputFromat}`,
+				),
+				setWriting,
 			),
 		]);
 	};
@@ -94,6 +110,10 @@ export default function MockExam() {
 						<Markdown>{readingPart2}</Markdown>
 						<Divider margin="12px" />
 						<Markdown>{readingPart3}</Markdown>
+						<Divider margin="12px" />
+						<Markdown>{translation}</Markdown>
+						<Divider margin="12px" />
+						<Markdown>{writing}</Markdown>
 					</>
 				) : (
 					<div className="flex justify-center items-center h-full flex-col">
