@@ -27,7 +27,7 @@ export default function MockExam() {
 				{
 					modelName: "gpt-3.5-turbo",
 					openAIApiKey: process.env.openAIApiKey,
-					temperature: 0.3,
+					temperature: 0.8,
 				},
 				{ baseURL: process.env.proxyUrl },
 			);
@@ -46,7 +46,7 @@ export default function MockExam() {
 		const outputFromat =
 			"要求: 使用markdown格式输出, 不要输出答案, 除标题外都用英文";
 		const systemFromat =
-			"你需要帮我模拟一份中国的英语等级考试, 模拟题目标题格式和题目内容, 遵循以下要求和标准: \n";
+			"你需要帮我模拟一次学生的英语等级考试, 模拟题目标题格式和题目内容, 遵循以下要求和标准: \n";
 
 		setIsEmpty(false);
 
@@ -59,19 +59,19 @@ export default function MockExam() {
 			),
 			handleStream(
 				await stream(
-					`${systemFromat}模拟CET-6难度的阅读题目, 只需要你生成其中的第一篇即可, 控制阅读时间在10-15分钟, 前面放个大标题'阅读练习 (3 questions, 30 points)', ${outputFromat}`,
+					`${systemFromat}模拟CET-6难度的阅读理解题目, 只需要你生成其中的第一篇即可, 题材是关于商业新闻的, 控制阅读时间在10-15分钟至少700字, 至少有3个选择题目, 难度为中等, 前面放个大标题'阅读练习 (3 passages, 30 points)', ${outputFromat}`,
 				),
 				setReadingPart1,
 			),
 			handleStream(
 				await stream(
-					`${systemFromat}模拟CET-6难度的阅读题目, 只需要你生成其中的第二篇即可, 控制阅读时间在10-15分钟, 前面放个标题'Passage 2', ${outputFromat}`,
+					`${systemFromat}模拟CET-6难度的阅读理解题目, 只需要你生成其中的第二篇即可, 题材是关于科技环境的, 控制阅读时间在10-15分钟至少700字, 至少有3个选择题目, 难度为中等, 前面放个标题'Passage 2', ${outputFromat}`,
 				),
 				setReadingPart2,
 			),
 			handleStream(
 				await stream(
-					`${systemFromat}模拟CET-6难度的阅读题目, 只需要你生成其中的第三篇即可, 控制阅读时间在10-15分钟, 前面放个标题'Passage 3', ${outputFromat}`,
+					`${systemFromat}模拟CET-6难度的阅读理解题目, 只需要你生成其中的第三篇即可, 题材是关于人文故事的, 控制阅读时间在15-20分钟至少900字, 至少有3个选择题目, 难度为困难, 前面放个标题'Passage 3', ${outputFromat}`,
 				),
 				setReadingPart3,
 			),
