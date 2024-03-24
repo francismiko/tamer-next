@@ -102,19 +102,25 @@ export default function MockExam() {
 		<main className="px-16 py-8 h-full">
 			<Container className="h-full overflow-y-scroll">
 				{!isEmpty ? (
-					<>
-						<Markdown>{select}</Markdown>
-						<Divider margin="12px" />
-						<Markdown>{readingPart1}</Markdown>
-						<Divider margin="12px" />
-						<Markdown>{readingPart2}</Markdown>
-						<Divider margin="12px" />
-						<Markdown>{readingPart3}</Markdown>
-						<Divider margin="12px" />
-						<Markdown>{translation}</Markdown>
-						<Divider margin="12px" />
-						<Markdown>{writing}</Markdown>
-					</>
+					!select ? (
+						<div className="flex justify-center items-center h-full">
+							<Spin size="large" />
+						</div>
+					) : (
+						<>
+							<Markdown>{select}</Markdown>
+							<Divider margin="12px" />
+							<Markdown>{readingPart1}</Markdown>
+							<Divider margin="12px" />
+							<Markdown>{readingPart2}</Markdown>
+							<Divider margin="12px" />
+							<Markdown>{readingPart3}</Markdown>
+							<Divider margin="12px" />
+							<Markdown>{translation}</Markdown>
+							<Divider margin="12px" />
+							<Markdown>{writing}</Markdown>
+						</>
+					)
 				) : (
 					<div className="flex justify-center items-center h-full flex-col">
 						<Empty
