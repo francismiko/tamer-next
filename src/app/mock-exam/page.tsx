@@ -90,14 +90,6 @@ export default function MockExam() {
 		]);
 	};
 
-	if (!isLoaded) {
-		return (
-			<div className="flex justify-center items-center h-full">
-				<Spin size="large" />
-			</div>
-		);
-	}
-
 	return (
 		<main className="px-16 py-8 h-full">
 			<Container className="h-full overflow-y-scroll">
