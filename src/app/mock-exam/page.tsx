@@ -24,38 +24,12 @@ export default function MockExam() {
 			const model = new OpenAI(
 				{
 					openAIApiKey: process.env.openAIApiKey,
-					temperature: 0.5,
+					temperature: 0.7,
 				},
 				{ baseURL: process.env.proxyUrl },
 			);
 			return model.pipe(parser).stream(prompt);
 		};
-
-		const outputFromat = "要求: 使用markdown格式输出, 不要输出答案";
-		const systemFromat =
-			"你需要帮我模拟在中国的英语升学考试, 模拟题目标题格式和题目内容, 遵循以下要求和标准: \n";
-
-		setIsEmpty(false);
-
-		const [
-			selectStream,
-			readingPart1Stream,
-			readingPart2Stream,
-			readingPart3Stream,
-		] = await Promise.all([
-			await stream(
-				`${systemFromat}模拟CET-6难度的选择题5个, 前面放个大标题'选择题练习(5 questions, 15 points)', ${outputFromat}`,
-			),
-			await stream(
-				`${systemFromat}模拟CET-6难度的阅读题目, 只需要你生成其中的第一篇即可, 控制阅读时间在10-15分钟, 前面放个大标题'阅读练习 (3 questions, 30 points)', ${outputFromat}`,
-			),
-			await stream(
-				`${systemFromat}模拟CET-6难度的阅读题目, 只需要你生成其中的第二篇即可, 控制阅读时间在10-15分钟, 前面放个标题'Passage 2', ${outputFromat}`,
-			),
-			await stream(
-				`${systemFromat}模拟CET-6难度的阅读题目, 只需要你生成其中的第三篇即可, 控制阅读时间在10-15分钟, 前面放个标题'Passage 3', ${outputFromat}`,
-			),
-		]);
 
 		const handleStream = async (
 			stream: AsyncIterable<string>,
@@ -66,11 +40,37 @@ export default function MockExam() {
 			}
 		};
 
+		const outputFromat = "要求: 使用markdown格式输出, 不要输出答案";
+		const systemFromat =
+			"你需要帮我模拟在中国的英语升学考试, 模拟题目标题格式和题目内容, 遵循以下要求和标准: \n";
+
+		setIsEmpty(false);
+
 		await Promise.all([
-			handleStream(selectStream, setSelect),
-			handleStream(readingPart1Stream, setReadingPart1),
-			handleStream(readingPart2Stream, setReadingPart2),
-			handleStream(readingPart3Stream, setReadingPart3),
+			handleStream(
+				await stream(
+					`${systemFromat}模拟CET-6难度的选择题5个, 前面放个大标题'选择题练习(5 questions, 15 points)', ${outputFromat}`,
+				),
+				setSelect,
+			),
+			handleStream(
+				await stream(
+					`${systemFromat}模拟CET-6难度的阅读题目, 只需要你生成其中的第一篇即可, 控制阅读时间在10-15分钟, 前面放个大标题'阅读练习 (3 questions, 30 points)', ${outputFromat}`,
+				),
+				setReadingPart1,
+			),
+			handleStream(
+				await stream(
+					`${systemFromat}模拟CET-6难度的阅读题目, 只需要你生成其中的第二篇即可, 控制阅读时间在10-15分钟, 前面放个标题'Passage 2', ${outputFromat}`,
+				),
+				setReadingPart2,
+			),
+			handleStream(
+				await stream(
+					`${systemFromat}模拟CET-6难度的阅读题目, 只需要你生成其中的第三篇即可, 控制阅读时间在10-15分钟, 前面放个标题'Passage 3', ${outputFromat}`,
+				),
+				setReadingPart3,
+			),
 		]);
 	};
 
