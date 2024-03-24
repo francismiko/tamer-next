@@ -1,6 +1,13 @@
 "use client";
 
-import { Empty, Input, Spin } from "@douyinfe/semi-ui";
+import {
+	Button,
+	Empty,
+	Input,
+	Popconfirm,
+	Spin,
+	Toast,
+} from "@douyinfe/semi-ui";
 import { IconLink, IconSend } from "@douyinfe/semi-icons";
 import { useEffect, useRef, useState } from "react";
 import { StringOutputParser } from "langchain/schema/output_parser";
@@ -13,6 +20,7 @@ import {
 	type Message,
 } from "@/hooks/useSWRMutate/useUpsertChat";
 import { useMessagesByOwner } from "@/hooks/useSWR/useMessagesByOwner";
+import { mutate } from "swr";
 
 export default function ChatBot() {
 	const { userId } = useAuth();
@@ -109,6 +117,17 @@ export default function ChatBot() {
 		});
 	};
 
+	const handleDeleteMesgs = async () => {
+		try {
+			await fetch(`/api/message?owner=${userId}`, { method: "DELETE" });
+
+			mutate(`/api/message?owner=${userId}`);
+			Toast.success({ content: "删除成功" });
+		} catch (e) {
+			Toast.error({ content: "删除失败" });
+		}
+	};
+
 	const handleKeyPress = (event: { key: string }) => {
 		if (event.key === "Enter") {
 			handleMessageSubmit();
@@ -165,6 +184,21 @@ export default function ChatBot() {
 						/>
 					</div>
 				)}
+				<Popconfirm
+					title="确定是否清除当前的聊天历史？"
+					position="bottomRight"
+					okType="warning"
+					okButtonProps={{ className: "bg-slate-200 text-black" }}
+					onConfirm={handleDeleteMesgs}
+				>
+					<Button
+						theme="borderless"
+						type="danger"
+						className=" absolute top-20 right-20"
+					>
+						清除聊天
+					</Button>
+				</Popconfirm>
 			</main>
 			<footer className="h-[10%] w-full flex justify-center">
 				<Input
