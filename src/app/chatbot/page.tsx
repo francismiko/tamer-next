@@ -15,9 +15,9 @@ import {
 import { useMessagesByOwner } from "@/hooks/useSWR/useMessagesByOwner";
 
 export default function ChatBot() {
-	const { isLoaded, userId } = useAuth();
+	const { userId } = useAuth();
 	const { upsertChat } = useUpsertChat();
-	const { messages, isMessagesLoading } = useMessagesByOwner({
+	const { messages } = useMessagesByOwner({
 		userId: userId as string,
 	});
 	const [inputValue, setInputValue] = useState("");
@@ -117,9 +117,6 @@ export default function ChatBot() {
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		if (!scrollRef.current) return;
-		scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-
 		if (!messages) return;
 		mesgsRef.current = messages?.map((message) => ({
 			text: message.text,
@@ -128,6 +125,12 @@ export default function ChatBot() {
 
 		rerender();
 	}, [messages]);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (!scrollRef.current) return;
+		scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+	}, [mesgsRef.current]);
 
 	return (
 		<>

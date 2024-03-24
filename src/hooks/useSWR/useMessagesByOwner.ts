@@ -1,5 +1,5 @@
 import type { Chat as _Chat, Message as _Message } from "@prisma/client";
-import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 
 type QueryParams = {
 	userId: _Chat["owner"];
@@ -13,7 +13,7 @@ export const useMessagesByOwner = (
 	isMessagesError: Error;
 } => {
 	const { userId } = queryParams;
-	const { data, error, isLoading } = useSWR<_Message[]>(
+	const { data, error, isLoading } = useSWRImmutable<_Message[]>(
 		`/api/message?owner=${userId}`,
 	);
 
