@@ -102,7 +102,12 @@ export default function MockExam() {
 		<main className="px-16 py-8 h-full">
 			<Container className="h-full overflow-y-scroll">
 				{!isEmpty ? (
-					!select ? (
+					!select &&
+					!readingPart1 &&
+					!readingPart2 &&
+					!readingPart3 &&
+					!translation &&
+					!writing ? (
 						<div className="flex justify-center items-center h-full">
 							<Spin size="large" />
 						</div>
