@@ -187,7 +187,6 @@ export default function ChatBot() {
 				<Popconfirm
 					title="确定是否清除当前的聊天历史？"
 					position="bottomRight"
-					okType="warning"
 					okButtonProps={{ className: "bg-slate-200 text-black" }}
 					onConfirm={handleDeleteMesgs}
 				>

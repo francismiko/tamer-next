@@ -2,6 +2,61 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+
+@layer base {
+  html {
+    @apply text-neutral-800;
+  }
+
+  ul {
+    @apply list-disc list-outside;
+  }
+
+  ol {
+    @apply list-decimal list-outside;
+  }
+
+  ul,
+  ol {
+    @apply mb-3;
+  }
+
+  li {
+    @apply whitespace-normal;
+  }
+
+  p {
+    @apply mb-2 p-0 whitespace-pre-wrap;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  li,
+  p,
+  strong {
+    @apply mb-2 mt-0 leading-tight font-medium;
+  }
+
+  h1,
+  h2 {
+    @apply text-2xl;
+  }
+
+  h3,
+  h4,
+  h5 {
+    @apply text-xl;
+  }
+
+  h6 {
+    @apply text-base;
+  }
+}
+
 body {
   color: var(--semi-color-text-0);
   background-color: var(--semi-color-bg-0);
