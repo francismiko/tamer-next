@@ -1,7 +1,6 @@
 "use client";
 
 import Container from "@/components/container";
-import { useAuth } from "@clerk/nextjs";
 import { Button, Divider, Empty, Spin } from "@douyinfe/semi-ui";
 import { IconPlus } from "@douyinfe/semi-icons";
 import { IllustrationSuccess } from "@douyinfe/semi-illustrations";
@@ -17,8 +16,15 @@ export default function MockExam() {
 	const [readingPart3, setReadingPart3] = useState<string>("");
 	const [translation, setTranslation] = useState<string>("");
 	const [writing, setWriting] = useState<string>("");
+	const examContent = [
+		select,
+		readingPart1,
+		readingPart2,
+		readingPart3,
+		translation,
+		writing,
+	];
 	const [isEmpty, setIsEmpty] = useState<boolean>(true);
-	const { isLoaded } = useAuth();
 
 	const handleGenerateExam = async () => {
 		const stream = async (prompt: string) => {
@@ -105,17 +111,12 @@ export default function MockExam() {
 						</div>
 					) : (
 						<>
-							<Markdown>{select}</Markdown>
-							<Divider margin="12px" />
-							<Markdown>{readingPart1}</Markdown>
-							<Divider margin="12px" />
-							<Markdown>{readingPart2}</Markdown>
-							<Divider margin="12px" />
-							<Markdown>{readingPart3}</Markdown>
-							<Divider margin="12px" />
-							<Markdown>{translation}</Markdown>
-							<Divider margin="12px" />
-							<Markdown>{writing}</Markdown>
+							{examContent.map((content, index) => (
+								<>
+									<Markdown>{content}</Markdown>
+									{index < examContent.length - 1 && <Divider margin="12px" />}
+								</>
+							))}
 						</>
 					)
 				) : (

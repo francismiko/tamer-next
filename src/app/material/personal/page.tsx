@@ -2,17 +2,28 @@
 
 import Container from "@/components/container";
 import { useAuth } from "@clerk/nextjs";
-import {
-	Button,
-	Card,
-	Space,
-	Spin,
-	Upload,
-} from "@douyinfe/semi-ui";
+import { Button, Card, Space, Spin, Upload } from "@douyinfe/semi-ui";
+import type { FileItem } from "@douyinfe/semi-ui/lib/es/upload";
 
 export default function Personal() {
 	const materials = ["1", "2", "3", "4", "5", "6"];
 	const { Meta } = Card;
+
+	const beforeUploadHandler = (file: File) => {
+		console.log(file);
+	};
+
+	const handleOnSuccess = async (
+		responseBody: any,
+		file: File,
+		fileList: FileItem[],
+	) => {
+		console.log(file);
+		// await fetch("/api/upload", {
+		// 	method: "POST",
+		// 	body: file,
+		// });
+	};
 
 	const { isLoaded } = useAuth();
 	if (!isLoaded) {
@@ -30,10 +41,11 @@ export default function Personal() {
 					<div className="h-full p-6">
 						<Upload
 							className="h-full"
-							action=""
+							action="/api/upload/private"
 							draggable={true}
 							dragMainText={"点击上传文件或拖拽文件到这里"}
 							dragSubText="支持任意类型文件"
+							onSuccess={handleOnSuccess}
 						/>
 					</div>
 					{materials.map((material, index) => (
