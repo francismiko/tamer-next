@@ -88,9 +88,7 @@ export default function Discussion() {
 									className={`absolute drop-shadow-md top-6 ${
 										id === user?.id ? " -right-16" : "-left-16"
 									}`}
-								>
-									U
-								</Avatar>
+								/>
 								<p>{senderName}</p>
 								<div className="inline-block whitespace-normal drop-shadow-lg max-w-xs h-auto px-4 py-2 bg-indigo-50 rounded mb-8">
 									<Markdown>{content}</Markdown>

@@ -99,7 +99,7 @@ export default function ChatBot() {
 		const stream = await model.pipe(parser).stream([
 			[
 				"system",
-				"你是个英语学习助手, 负责用热情的态度去回答用户问题或对题目进行批改解答, 要求:使用markdown格式化输出内容",
+				"你是个英语学习助手, 负责用幽默风趣的风格去回答用户问题或对题目进行批改解答, 对用户提出的问题用尽可能详细易懂的话术去解答描述, 如果对方对学习英语的方法存在困惑, 请列举一些有效的学习方案, 要求: 在每句话中加入表情让对话更有趣些",
 			],
 			["human", userMessage],
 		]);
@@ -158,10 +158,10 @@ export default function ChatBot() {
 					mesgsRef?.current?.map(({ sender, text }, index) => (
 						<div className="px-64 grid">
 							<div
-								className={`inline-block px-4 py-4 mt-4 rounded-md ${
+								className={`inline-block px-8 py-4 mt-4 rounded-md mb-4 ${
 									sender === "USER"
 										? "bg-slate-100 justify-self-end"
-										: "bg-purple-100 justify-self-start"
+										: "bg-purple-50 justify-self-start"
 								}`}
 							>
 								<span>
