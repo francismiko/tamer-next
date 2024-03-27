@@ -6,7 +6,7 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "socket": "nodemon server/socket.js",
+    "socket": "node server/socket.js",
     "lint": "next lint"
   },
   "dependencies": {

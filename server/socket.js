@@ -7,10 +7,9 @@ const io = new Server({
 });
 
 io.on("connection", (socket) => {
-	console.log("a user connected");
-
-	socket.on("message", (msg) => {
-		console.log(`message: ${msg}`);
+	socket.on("message", (data) => {
+		console.log(`message: ${data}`);
+		io.emit("messageResponse", data);
 	});
 });
 

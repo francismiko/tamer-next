@@ -6,6 +6,7 @@ import { Layout, Spin } from "@douyinfe/semi-ui";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useState, type FC, useEffect } from "react";
+import Markdown from "react-markdown";
 import { io } from "socket.io-client";
 
 export default function Discussion() {
@@ -17,30 +18,31 @@ export default function Discussion() {
 
 	const handleSendMessage = () => {
 		if (!socket) return;
-		console.log(socket);
+		if (!currentMessage) return;
 
 		socket.emit("message", currentMessage);
 		setCurrentMessage("");
 	};
 
+	const sendMessageEvent = (message: string) => {
+		setMessages((prevMessages) => [...prevMessages, message]);
+	};
+
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+		if (e.key === "Enter") {
+			e.preventDefault();
+			handleSendMessage();
+		}
+	};
+
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		socket.connect();
-		console.log(socket);
 
-		socket.emit("test", "This is a test message from client");
-
-		socket.on("test", (response) => {
-			console.log("Received response from server:", response);
-		});
-
-		socket.on("message", (message) => {
-			setMessages((prevMessages) => [...prevMessages, message]);
-		});
+		socket.on("messageResponse", sendMessageEvent);
 
 		return () => {
-			if (!socket) return;
-
+			socket.off("messageResponse", sendMessageEvent);
 			socket.disconnect();
 		};
 	}, []);
@@ -56,22 +58,22 @@ export default function Discussion() {
 	return (
 		<main className="px-32 py-8 h-full">
 			<Container className="h-full overflow-hidden px-0 py-0">
-				<Header className="h-4">Header</Header>
-				<Content className="h-3/4">
+				<Header className="h-4"></Header>
+				<Content className="h-3/4 px-24 overflow-y-scroll">
 					{messages.map((message, index) => (
-						<p>{message}</p>
+						<div className="drop-shadow-lg max-w-xs h-auto mx-2 px-4 py-2 bg-slate-100 rounded mb-8">
+							<Markdown>{message}</Markdown>
+						</div>
 					))}
 				</Content>
 				<Footer className="h-1/4">
-					<Toolbar>1</Toolbar>
+					<Toolbar />
 					<input
 						type="text"
 						value={currentMessage}
 						onChange={(e) => setCurrentMessage(e.target.value)}
+						onKeyDown={handleKeyDown}
 					/>
-					<button type="button" onClick={handleSendMessage}>
-						Send
-					</button>
 					{/* <Editor /> */}
 				</Footer>
 			</Container>
@@ -79,7 +81,7 @@ export default function Discussion() {
 	);
 }
 
-const Toolbar: FC<{ children: React.ReactNode; className?: string }> = ({
+const Toolbar: FC<{ children?: React.ReactNode; className?: string }> = ({
 	children,
 	className,
 }) => {
