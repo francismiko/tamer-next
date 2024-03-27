@@ -51,7 +51,7 @@ export default function Personal() {
 					{materials.map((material, index) => (
 						<div className="h-full p-6">
 							<Card
-								title={<Meta title="Semi Doc" />}
+								title={<Meta title="Test Doc" />}
 								headerStyle={{ padding: "8px" }}
 								headerExtraContent={
 									<Button theme="borderless" type="primary">
@@ -80,8 +80,7 @@ export default function Personal() {
 									</Space>
 								}
 							>
-								Semi Design 是由互娱社区前端团队与 UED
-								团队共同设计开发并维护的设计系统。
+								这是一段测试文字
 							</Card>
 						</div>
 					))}

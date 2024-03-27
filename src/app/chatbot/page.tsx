@@ -21,6 +21,7 @@ import {
 } from "@/hooks/useSWRMutate/useUpsertChat";
 import { useMessagesByOwner } from "@/hooks/useSWR/useMessagesByOwner";
 import { mutate } from "swr";
+import remarkGfm from "remark-gfm";
 
 export default function ChatBot() {
 	const { userId } = useAuth();
@@ -168,7 +169,7 @@ export default function ChatBot() {
 									{isPendding && mesgsRef?.current?.length - 1 === index ? (
 										<Spin />
 									) : (
-										<Markdown>{text}</Markdown>
+										<Markdown remarkPlugins={[remarkGfm]}>{text}</Markdown>
 									)}
 								</span>
 							</div>

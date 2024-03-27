@@ -54,6 +54,31 @@
   h6 {
     @apply text-base;
   }
+
+  table {
+    @apply min-w-full text-sm font-light;
+  }
+
+  thead {
+    @apply border-b bg-teal-100;
+  }
+
+  tbody {
+    @apply divide-y divide-x;
+  }
+
+  th,
+  td {
+    @apply text-left;
+  }
+
+  th {
+    @apply px-2 py-2 font-medium whitespace-nowrap;
+  }
+
+  td {
+    @apply px-2 py-4 font-normal;
+  }
 }
 
 body {
