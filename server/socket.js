@@ -8,7 +8,7 @@ const io = new Server({
 
 io.on("connection", (socket) => {
 	socket.on("message", (data) => {
-		console.log(`message: ${data}`);
+		console.log({ data });
 		io.emit("messageResponse", data);
 	});
 });
