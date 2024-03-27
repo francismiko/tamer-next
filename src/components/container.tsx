@@ -3,7 +3,7 @@ const Container = ({
 	className,
 }: { children: React.ReactNode; className?: string }) => {
 	return (
-		<div className={`rounded-xl py-4 px-8 outline-1 outline ${className}`}>
+		<div className={`${className} rounded-xl outline-1 outline`}>
 			{children}
 		</div>
 	);

@@ -36,7 +36,7 @@ export default function Personal() {
 
 	return (
 		<main className="px-16 py-8 h-full">
-			<Container className="h-full overflow-y-scroll">
+			<Container className="h-full overflow-y-scroll py-4 px-8">
 				<div className="grid grid-cols-4 h-96">
 					<div className="h-full p-6">
 						<Upload

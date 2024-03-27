@@ -245,7 +245,7 @@ export default function Plan() {
 
 	return (
 		<main className="px-16 py-4">
-			<Container>
+			<Container className="py-4 px-8">
 				<Button onClick={showDialog} className="float-right mb-2 bg-slate-200">
 					新建计划
 				</Button>
