@@ -20,6 +20,7 @@ import {
 	IconArticle,
 	IconUserGroup,
 	IconSetting,
+	IconMark,
 } from "@douyinfe/semi-icons";
 import ".././css/globals.css";
 import { SWRConfig } from "swr";
@@ -79,6 +80,12 @@ export default function RootLayout({
 										itemKey={"chatbot"}
 										text={"AI 问答"}
 										icon={<LogosOpenaiIcon fontSize={18} />}
+									/>
+									<Nav.Item
+										link="/word"
+										itemKey={"word"}
+										text={"单词练习"}
+										icon={<IconMark fontSize={18} />}
 									/>
 									<Nav.Item
 										link="/plan"

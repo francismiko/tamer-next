@@ -73,12 +73,12 @@ export default function Discussion() {
 	return (
 		<main className="px-32 py-8 h-full">
 			<Container className="h-full overflow-hidden px-0 py-0">
-				<Header className="h-4"></Header>
+				<Header className="h-4" />
 				<Content className="h-3/4 px-24 overflow-y-scroll">
 					{messages?.map(({ content, senderName, id, avatar }) => (
 						<div className="grid">
 							<div
-								className={`relative ${
+								className={`relative grid ${
 									id === user?.id ? "justify-self-end" : "justify-self-start"
 								}`}
 							>
@@ -89,8 +89,14 @@ export default function Discussion() {
 										id === user?.id ? " -right-16" : "-left-16"
 									}`}
 								/>
-								<p>{senderName}</p>
-								<div className="inline-block whitespace-normal drop-shadow-lg max-w-xs h-auto px-4 py-2 bg-indigo-50 rounded mb-8">
+								<p className={`${id === user?.id ? "ml-auto" : "mr-auto"}`}>
+									{senderName}
+								</p>
+								<div
+									className={`inline-block whitespace-normal drop-shadow max-w-xs h-auto px-4 py-2 bg-indigo-50 rounded mb-8 ${
+										id === user?.id ? "ml-auto" : "mr-auto"
+									}`}
+								>
 									<Markdown>{content}</Markdown>
 								</div>
 							</div>
@@ -104,6 +110,7 @@ export default function Discussion() {
 						value={currentMessage}
 						onChange={(e) => setCurrentMessage(e.target.value)}
 						onKeyDown={handleKeyDown}
+						className="w-full"
 					/>
 					{/* <Editor /> */}
 				</Footer>
