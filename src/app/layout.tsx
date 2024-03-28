@@ -85,7 +85,7 @@ export default function RootLayout({
 										link="/word"
 										itemKey={"word"}
 										text={"单词练习"}
-										icon={<IconMark fontSize={18} />}
+										icon={<IconMark />}
 									/>
 									<Nav.Item
 										link="/plan"
