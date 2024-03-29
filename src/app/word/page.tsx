@@ -30,13 +30,11 @@ export default function Word() {
 			}
 
 			if (inputWord.toLowerCase() === word?.name) {
-				alert("Congratulations! You spelled the word correctly!");
 				setInputWord("");
 			}
 
 			if (key === "Enter") {
 				e.preventDefault();
-				console.log("Enter");
 			}
 		};
 
