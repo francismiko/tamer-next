@@ -20,16 +20,23 @@ export default function Word() {
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const handleKeyDown = (e: any) => {
-			const keyPressed = e.key.toLowerCase();
-			if (keyPressed === "backspace") {
+			const { key } = e;
+
+			if (!isQuizMode) return;
+			if (key === "Backspace") {
 				setInputWord((prevInputWord) => prevInputWord.slice(0, -1));
-			} else if (/[a-zA-Z]/.test(keyPressed)) {
-				setInputWord((prevInputWord) => prevInputWord + keyPressed);
+			} else if (/[a-zA-Z]/.test(key) && key.length === 1) {
+				setInputWord((prevInputWord) => prevInputWord + key.toLowerCase());
 			}
 
 			if (inputWord.toLowerCase() === word?.name) {
 				alert("Congratulations! You spelled the word correctly!");
 				setInputWord("");
+			}
+
+			if (key === "Enter") {
+				e.preventDefault();
+				console.log("Enter");
 			}
 		};
 
@@ -38,7 +45,7 @@ export default function Word() {
 		return () => {
 			document.removeEventListener("keydown", handleKeyDown);
 		};
-	}, [inputWord]);
+	}, [inputWord, isQuizMode]);
 
 	useEffect(() => {
 		setWord(words[Math.floor(Math.random() * words.length)]);
@@ -50,7 +57,10 @@ export default function Word() {
 				<button
 					type="button"
 					className="button"
-					onClick={() => setIsQuizMode((prev) => !prev)}
+					onClick={() => {
+						setIsQuizMode((prev) => !prev);
+						setInputWord("");
+					}}
 				>
 					{isQuizMode ? "关闭默写模式" : "开启默写模式"}
 				</button>
@@ -58,7 +68,7 @@ export default function Word() {
 					<div className="text-6xl font-bold mb-2">{word?.name}</div>
 				) : (
 					<div className="text-6xl font-bold mb-2">
-						{inputWord || "Type here"}
+						{inputWord || "_________"}
 					</div>
 				)}
 				<div className="text-2xl font-bold">{word?.ukphone}</div>
