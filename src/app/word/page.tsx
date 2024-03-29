@@ -14,7 +14,31 @@ export type WordData = {
 
 export default function Word() {
 	const [word, setWord] = useState<WordData>();
+	const [inputWord, setInputWord] = useState("");
 	const [isQuizMode, setIsQuizMode] = useState(false);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		const handleKeyDown = (e: any) => {
+			const keyPressed = e.key.toLowerCase();
+			if (keyPressed === "backspace") {
+				setInputWord((prevInputWord) => prevInputWord.slice(0, -1));
+			} else if (/[a-zA-Z]/.test(keyPressed)) {
+				setInputWord((prevInputWord) => prevInputWord + keyPressed);
+			}
+
+			if (inputWord.toLowerCase() === word?.name) {
+				alert("Congratulations! You spelled the word correctly!");
+				setInputWord("");
+			}
+		};
+
+		document.addEventListener("keydown", handleKeyDown);
+
+		return () => {
+			document.removeEventListener("keydown", handleKeyDown);
+		};
+	}, [inputWord]);
 
 	useEffect(() => {
 		setWord(words[Math.floor(Math.random() * words.length)]);
@@ -30,8 +54,12 @@ export default function Word() {
 				>
 					{isQuizMode ? "关闭默写模式" : "开启默写模式"}
 				</button>
-				{!isQuizMode && (
+				{!isQuizMode ? (
 					<div className="text-6xl font-bold mb-2">{word?.name}</div>
+				) : (
+					<div className="text-6xl font-bold mb-2">
+						{inputWord || "Type here"}
+					</div>
 				)}
 				<div className="text-2xl font-bold">{word?.ukphone}</div>
 				<div className="text-xl font-bold  text-gray- 500">{word?.trans} </div>
