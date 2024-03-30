@@ -1,7 +1,6 @@
 "use client";
 
 import words from "@/data/CET-6.json";
-import { Button } from "@douyinfe/semi-ui";
 import { useEffect, useState } from "react";
 import "@/css/button.css";
 
@@ -16,6 +15,22 @@ export default function Word() {
 	const [word, setWord] = useState<WordData>();
 	const [inputWord, setInputWord] = useState("");
 	const [isQuizMode, setIsQuizMode] = useState(false);
+	const [wordStack, setWordStack] = useState<number[]>([]);
+	const [wordIndex, setWordIndex] = useState(-1);
+
+	const previous = () => {
+		if ((wordStack as number[])?.length > 0) {
+			setWordIndex((prev) => prev - 1);
+		}
+	};
+
+	const next = () => {
+		if (wordIndex === (wordStack as number[])?.length - 1) {
+			const index = Math.floor(Math.random() * words.length);
+			setWordStack((prev) => [...(prev ?? []), index]);
+		}
+		setWordIndex((prev) => prev + 1);
+	};
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -45,9 +60,13 @@ export default function Word() {
 		};
 	}, [inputWord, isQuizMode]);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		setWord(words[Math.floor(Math.random() * words.length)]);
-	}, []);
+		if (wordIndex === -1) {
+			next();
+		}
+		setWord(words[wordStack[wordIndex]]);
+	}, [wordIndex]);
 
 	return (
 		<div className="flex relative justify-center items-center h-full">
@@ -72,13 +91,13 @@ export default function Word() {
 				<div className="text-2xl font-bold">{word?.ukphone}</div>
 				<div className="text-xl font-bold  text-gray- 500">{word?.trans} </div>
 				<div className="flex gap-12 mt-12">
-					<button type="button" className="button2">
+					<button type="button" className="button2" onClick={previous}>
 						<span className="button_top">上一个</span>
 					</button>
 					<button type="button" className="button2">
 						<span className="button_top">忘记了</span>
 					</button>
-					<button type="button" className="button2">
+					<button type="button" className="button2" onClick={next}>
 						<span className="button_top">下一个</span>
 					</button>
 				</div>
