@@ -169,7 +169,7 @@ export default function Word() {
 					</button>
 				</div>
 			</div>
-			<SideSheet title="单词错题本" visible={visible} onCancel={change}>
+			<SideSheet title="单词复习本" visible={visible} onCancel={change}>
 				<List
 					bordered
 					dataSource={dataSource}
