@@ -3,6 +3,9 @@
 import words from "@/data/CET-6.json";
 import { useEffect, useState } from "react";
 import "@/css/button.css";
+import { Notification, SideSheet } from "@douyinfe/semi-ui";
+import { useCreateNotebook } from "@/hooks/useSWRMutate/useCreateNotebook";
+import { useAuth } from "@clerk/nextjs";
 
 export type WordData = {
 	usphone?: string;
@@ -12,24 +15,46 @@ export type WordData = {
 };
 
 export default function Word() {
+	const { createNotebook } = useCreateNotebook();
+	const { userId } = useAuth();
 	const [word, setWord] = useState<WordData>();
 	const [inputWord, setInputWord] = useState("");
 	const [isQuizMode, setIsQuizMode] = useState(false);
 	const [wordStack, setWordStack] = useState<number[]>([]);
 	const [wordIndex, setWordIndex] = useState(-1);
+	const [visible, setVisible] = useState(false);
 
-	const previous = () => {
+	const change = () => {
+		setVisible(!visible);
+	};
+
+	const handlePrevious = () => {
 		if ((wordStack as number[])?.length > 0) {
 			setWordIndex((prev) => prev - 1);
 		}
 	};
 
-	const next = () => {
+	const handleNext = () => {
 		if (wordIndex === (wordStack as number[])?.length - 1) {
 			const index = Math.floor(Math.random() * words.length);
 			setWordStack((prev) => [...(prev ?? []), index]);
 		}
 		setWordIndex((prev) => prev + 1);
+	};
+
+	const handleForget = async () => {
+		if (!userId) return;
+		createNotebook({
+			owner: userId,
+			word_index: wordStack[wordIndex],
+		});
+
+		Notification.info({
+			title: "加入错题本",
+			duration: 1,
+		});
+
+		handleNext();
 	};
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -42,10 +67,6 @@ export default function Word() {
 				setInputWord((prevInputWord) => prevInputWord.slice(0, -1));
 			} else if (/[a-zA-Z]/.test(key) && key.length === 1) {
 				setInputWord((prevInputWord) => prevInputWord + key.toLowerCase());
-			}
-
-			if (inputWord.toLowerCase() === word?.name) {
-				setInputWord("");
 			}
 
 			if (key === "Enter") {
@@ -63,10 +84,22 @@ export default function Word() {
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (wordIndex === -1) {
-			next();
+			handleNext();
 		}
 		setWord(words[wordStack[wordIndex]]);
 	}, [wordIndex]);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (inputWord.toLowerCase() === word?.name) {
+			handleNext();
+			setInputWord("");
+			Notification.success({
+				title: "正确",
+				duration: 1,
+			});
+		}
+	}, [inputWord]);
 
 	return (
 		<div className="flex relative justify-center items-center h-full">
@@ -81,6 +114,13 @@ export default function Word() {
 				>
 					{isQuizMode ? "关闭默写模式" : "开启默写模式"}
 				</button>
+				<div
+					className="absolute flex flex-col items-center rounded-full size-24 right-12 bottom-12"
+					onClick={change}
+					onKeyDown={change}
+				>
+					<img alt="" src="/notebook.svg" className="size-36" />
+				</div>
 				{!isQuizMode ? (
 					<div className="text-6xl font-bold mb-2">{word?.name}</div>
 				) : (
@@ -91,17 +131,18 @@ export default function Word() {
 				<div className="text-2xl font-bold">{word?.ukphone}</div>
 				<div className="text-xl font-bold  text-gray- 500">{word?.trans} </div>
 				<div className="flex gap-12 mt-12">
-					<button type="button" className="button2" onClick={previous}>
+					<button type="button" className="button2" onClick={handlePrevious}>
 						<span className="button_top">上一个</span>
 					</button>
-					<button type="button" className="button2">
+					<button type="button" className="button2" onClick={handleForget}>
 						<span className="button_top">忘记了</span>
 					</button>
-					<button type="button" className="button2" onClick={next}>
+					<button type="button" className="button2" onClick={handleNext}>
 						<span className="button_top">下一个</span>
 					</button>
 				</div>
 			</div>
+			<SideSheet title="滑动侧边栏" visible={visible} onCancel={change} />
 		</div>
 	);
 }

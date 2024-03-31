@@ -53,3 +53,11 @@ model Message {
 
   @@index([chatId])
 }
+
+model Notebook {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  owner      String
+  word_index Int
+}
