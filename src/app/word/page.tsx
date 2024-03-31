@@ -3,9 +3,11 @@
 import words from "@/data/CET-6.json";
 import { useEffect, useState } from "react";
 import "@/css/button.css";
-import { Notification, SideSheet } from "@douyinfe/semi-ui";
+import { Badge, List, Notification, SideSheet } from "@douyinfe/semi-ui";
 import { useCreateNotebook } from "@/hooks/useSWRMutate/useCreateNotebook";
 import { useAuth } from "@clerk/nextjs";
+import { useNotebookByOwner } from "@/hooks/useSWR/useNotebookByOwner";
+import { mutate } from "swr";
 
 export type WordData = {
 	usphone?: string;
@@ -15,8 +17,14 @@ export type WordData = {
 };
 
 export default function Word() {
-	const { createNotebook } = useCreateNotebook();
 	const { userId } = useAuth();
+	const { createNotebook } = useCreateNotebook();
+	const { noteRecords } = useNotebookByOwner({ userId: userId ?? "" });
+	const dataSource = noteRecords?.map(({ word_index, id }) => ({
+		id,
+		name: words[word_index].name,
+		trans: words[word_index].trans,
+	}));
 	const [word, setWord] = useState<WordData>();
 	const [inputWord, setInputWord] = useState("");
 	const [isQuizMode, setIsQuizMode] = useState(false);
@@ -55,6 +63,16 @@ export default function Word() {
 		});
 
 		handleNext();
+		mutate(`/api/word?owner=${userId}`);
+	};
+
+	const handleDeleteNoteRecord = async (id: number, name: string) => {
+		await fetch(`/api/word?id=${id}`, { method: "DELETE" });
+		mutate(`/api/word?owner=${userId}`);
+		Notification.success({
+			title: `已完成复习 - ${name}`,
+			duration: 0.8,
+		});
 	};
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -114,13 +132,22 @@ export default function Word() {
 				>
 					{isQuizMode ? "关闭默写模式" : "开启默写模式"}
 				</button>
-				<div
-					className="absolute flex flex-col items-center rounded-full size-24 right-12 bottom-12"
-					onClick={change}
-					onKeyDown={change}
-				>
-					<img alt="" src="/notebook.svg" className="size-36" />
+				<div className="absolute right-12 bottom-12">
+					<Badge
+						count={noteRecords?.length}
+						type="danger"
+						className={`${!noteRecords && "hidden"}`}
+					>
+						<img
+							alt=""
+							src="/notebook.svg"
+							className="size-32 cursor-pointer"
+							onClick={change}
+							onKeyDown={change}
+						/>
+					</Badge>
 				</div>
+
 				{!isQuizMode ? (
 					<div className="text-6xl font-bold mb-2">{word?.name}</div>
 				) : (
@@ -142,7 +169,22 @@ export default function Word() {
 					</button>
 				</div>
 			</div>
-			<SideSheet title="滑动侧边栏" visible={visible} onCancel={change} />
+			<SideSheet title="单词错题本" visible={visible} onCancel={change}>
+				<List
+					bordered
+					dataSource={dataSource}
+					renderItem={({ name, trans, id }) => (
+						<>
+							<List.Item
+								className="cursor-pointer hover:text-green-600"
+								onClick={() => handleDeleteNoteRecord(id, name)}
+							>
+								{name} - {trans}
+							</List.Item>
+						</>
+					)}
+				/>
+			</SideSheet>
 		</div>
 	);
 }
