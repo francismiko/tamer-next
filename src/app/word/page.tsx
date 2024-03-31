@@ -3,7 +3,13 @@
 import words from "@/data/CET-6.json";
 import { useEffect, useState } from "react";
 import "@/css/button.css";
-import { Badge, List, Notification, SideSheet } from "@douyinfe/semi-ui";
+import {
+	Badge,
+	Dropdown,
+	List,
+	Notification,
+	SideSheet,
+} from "@douyinfe/semi-ui";
 import { useCreateNotebook } from "@/hooks/useSWRMutate/useCreateNotebook";
 import { useAuth } from "@clerk/nextjs";
 import { useNotebookByOwner } from "@/hooks/useSWR/useNotebookByOwner";
@@ -132,6 +138,30 @@ export default function Word() {
 				>
 					{isQuizMode ? "关闭默写模式" : "开启默写模式"}
 				</button>
+				<div className="absolute top-24">
+					<Dropdown
+						trigger={"click"}
+						position={"bottom"}
+						showTick={true}
+						render={
+							<Dropdown.Menu>
+								<Dropdown.Item active={true}>大学英语六级</Dropdown.Item>
+								<Dropdown.Item disabled={true}>大学英语四级</Dropdown.Item>
+								<Dropdown.Item disabled={true}>考研英语</Dropdown.Item>
+								<Dropdown.Item disabled={true}>高中英语</Dropdown.Item>
+								<Dropdown.Item disabled={true}>初中英语</Dropdown.Item>
+								<Dropdown.Item disabled={true}>小学英语</Dropdown.Item>
+								<Dropdown.Item disabled={true}>雅思托福</Dropdown.Item>
+								<Dropdown.Item disabled={true}>专业英语四级</Dropdown.Item>
+								<Dropdown.Item disabled={true}>专业英语八级</Dropdown.Item>
+							</Dropdown.Menu>
+						}
+					>
+						<button type="button" className="cta">
+							<span className="hover-underline-animation ">选择难度</span>
+						</button>
+					</Dropdown>
+				</div>
 				<div className="absolute right-12 bottom-12">
 					<Badge
 						count={noteRecords?.length}
@@ -147,7 +177,6 @@ export default function Word() {
 						/>
 					</Badge>
 				</div>
-
 				{!isQuizMode ? (
 					<div className="text-6xl font-bold mb-2">{word?.name}</div>
 				) : (
