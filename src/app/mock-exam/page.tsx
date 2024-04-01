@@ -1,7 +1,14 @@
 "use client";
 
 import Container from "@/components/container";
-import { Button, Divider, Empty, Spin } from "@douyinfe/semi-ui";
+import {
+	Button,
+	Divider,
+	Dropdown,
+	Empty,
+	Spin,
+	TextArea,
+} from "@douyinfe/semi-ui";
 import { IconPlus } from "@douyinfe/semi-icons";
 import { IllustrationSuccess } from "@douyinfe/semi-illustrations";
 import { OpenAI } from "langchain/llms/openai";
@@ -114,6 +121,8 @@ export default function MockExam() {
 							{examContent.map((content, index) => (
 								<>
 									<Markdown>{content}</Markdown>
+									<h6>答题区：</h6>
+									<TextArea autosize />
 									{index < examContent.length - 1 && <Divider margin="12px" />}
 								</>
 							))}
@@ -126,13 +135,30 @@ export default function MockExam() {
 								<IllustrationSuccess style={{ width: 250, height: 250 }} />
 							}
 						/>
-						<Button
-							icon={<IconPlus />}
-							iconPosition="right"
-							onClick={handleGenerateExam}
+						<Dropdown
+							trigger={"click"}
+							position={"bottom"}
+							showTick={true}
+							render={
+								<Dropdown.Menu>
+									<Dropdown.Item onClick={handleGenerateExam}>
+										大学英语六级
+									</Dropdown.Item>
+									<Dropdown.Item disabled={true}>大学英语四级</Dropdown.Item>
+									<Dropdown.Item disabled={true}>考研英语</Dropdown.Item>
+									<Dropdown.Item disabled={true}>高中英语</Dropdown.Item>
+									<Dropdown.Item disabled={true}>初中英语</Dropdown.Item>
+									<Dropdown.Item disabled={true}>小学英语</Dropdown.Item>
+									<Dropdown.Item disabled={true}>雅思托福</Dropdown.Item>
+									<Dropdown.Item disabled={true}>专业英语四级</Dropdown.Item>
+									<Dropdown.Item disabled={true}>专业英语八级</Dropdown.Item>
+								</Dropdown.Menu>
+							}
 						>
-							生成试卷
-						</Button>
+							<Button icon={<IconPlus />} iconPosition="right">
+								生成试卷
+							</Button>
+						</Dropdown>
 					</div>
 				)}
 			</Container>

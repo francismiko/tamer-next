@@ -64,7 +64,7 @@ export default function Word() {
 		});
 
 		Notification.info({
-			title: "加入错题本",
+			title: "已加入复习本",
 			duration: 1,
 		});
 
