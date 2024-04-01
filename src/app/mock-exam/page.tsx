@@ -15,6 +15,7 @@ import { OpenAI } from "langchain/llms/openai";
 import { useState } from "react";
 import { StringOutputParser } from "langchain/schema/output_parser";
 import Markdown from "react-markdown";
+import "@/css/button.css";
 
 export default function MockExam() {
 	const [select, setSelect] = useState<string>("");
@@ -23,6 +24,7 @@ export default function MockExam() {
 	const [readingPart3, setReadingPart3] = useState<string>("");
 	const [translation, setTranslation] = useState<string>("");
 	const [writing, setWriting] = useState<string>("");
+	const [textAreaValues, setTextAreaValues] = useState<string[]>([]);
 	const examContent = [
 		select,
 		readingPart1,
@@ -103,6 +105,18 @@ export default function MockExam() {
 		]);
 	};
 
+	const handleTextAreaChange = (index: number, value: string) => {
+		setTextAreaValues((prevValues) => {
+			const newValues = [...prevValues];
+			newValues[index] = value;
+			return newValues;
+		});
+	};
+
+	const handleSubmitExam = async (answer: string[]) => {
+		console.log(answer);
+	};
+
 	return (
 		<main className="px-16 py-8 h-full">
 			<Container className="h-full overflow-y-scroll py-4 px-8">
@@ -118,11 +132,23 @@ export default function MockExam() {
 						</div>
 					) : (
 						<>
+							<button
+								type="button"
+								className="cta fixed right-28 top-28"
+								onClick={() => handleSubmitExam(textAreaValues)}
+							>
+								<span className="hover-underline-animation">提交试卷</span>
+							</button>
 							{examContent.map((content, index) => (
 								<>
 									<Markdown>{content}</Markdown>
 									<h6>答题区：</h6>
-									<TextArea autosize />
+									<TextArea
+										placeholder="在此填入答案..."
+										value={textAreaValues[index]}
+										onChange={(value) => handleTextAreaChange(index, value)}
+										autosize
+									/>
 									{index < examContent.length - 1 && <Divider margin="12px" />}
 								</>
 							))}
