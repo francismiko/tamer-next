@@ -16,6 +16,7 @@ import {
 	IconStar,
 	IconVerify,
 	IconEdit,
+	IconUnlink,
 } from "@douyinfe/semi-icons";
 import { useMemo, useRef, useState } from "react";
 import { usePlans } from "@/hooks/useSWR/usePlans";
@@ -36,16 +37,23 @@ export default function Plan() {
 	const { mutate } = useSWRConfig();
 	const { plans, isPlansLoading } = usePlans();
 	const { createPlan } = useCreatePlan();
-	const [visible, setVisible] = useState(false);
+	const [createVisible, setCreateVisible] = useState(false);
+	const [updateVisible, setUpdateVisible] = useState(false);
+	const [currentId, setCurrentId] = useState("");
 	const formRef = useRef<any>(null);
 	const scroll = useMemo(() => ({ y: 500 }), []);
 
-	const showDialog = () => {
-		setVisible(true);
+	const showCreateDialog = () => {
+		setCreateVisible(true);
+	};
+
+	const showUpdateDialog = (id: number) => {
+		setUpdateVisible(true);
+		setCurrentId(id.toString());
 	};
 
 	const handleCreatePlan = async () => {
-		setVisible(false);
+		setCreateVisible(false);
 		const formValues = formRef.current.formApi.getValues();
 		await createPlan({ ...formValues, owner: userId });
 
@@ -53,8 +61,24 @@ export default function Plan() {
 		Toast.success({ content: "新建成功" });
 	};
 
-	const handleCancel = () => {
-		setVisible(false);
+	const handleUpdatePlan = async () => {
+		setUpdateVisible(false);
+		const formValues = formRef.current.formApi.getValues();
+		await fetch(`/api/plan?id=${currentId}`, {
+			method: "PUT",
+			body: JSON.stringify({ ...formValues }),
+		});
+
+		mutate("/api/plan");
+		Toast.success({ content: "新建成功" });
+	};
+
+	const handleCreateCancel = () => {
+		setCreateVisible(false);
+	};
+
+	const handleUpdateCancel = () => {
+		setUpdateVisible(false);
 	};
 
 	const handleDeletePlan = async (id: string) => {
@@ -205,7 +229,7 @@ export default function Plan() {
 											: () => handleCancelStar(record.id.toString())
 									}
 								>
-									收藏
+									{record.is_star ? "取消收藏" : "收藏"}
 								</Dropdown.Item>
 								<Dropdown.Item
 									icon={<IconVerify />}
@@ -215,9 +239,15 @@ export default function Plan() {
 											: () => handleCancelDone(record.id.toString())
 									}
 								>
-									标记完成
+									{record.is_done ? "取消完成" : "标记完成"}
 								</Dropdown.Item>
-								<Dropdown.Item icon={<IconEdit />}>修改</Dropdown.Item>
+								<Dropdown.Item
+									icon={<IconEdit />}
+									onClick={() => showUpdateDialog(record.id)}
+								>
+									修改
+								</Dropdown.Item>
+								<Dropdown.Item icon={<IconUnlink />}>分享</Dropdown.Item>
 								<Dropdown.Item
 									icon={<IconDelete />}
 									onClick={() => handleDeletePlan(record.id.toString())}
@@ -228,7 +258,7 @@ export default function Plan() {
 							</Dropdown.Menu>
 						}
 					>
-						<IconMore>始终展示</IconMore>
+						<IconMore />
 					</Dropdown>
 				);
 			},
@@ -246,7 +276,10 @@ export default function Plan() {
 	return (
 		<main className="px-16 py-4">
 			<Container className="py-4 px-8">
-				<Button onClick={showDialog} className="float-right mb-2 bg-slate-200">
+				<Button
+					onClick={showCreateDialog}
+					className="float-right mb-2 bg-slate-200"
+				>
 					新建计划
 				</Button>
 				{plans && (
@@ -255,11 +288,47 @@ export default function Plan() {
 			</Container>
 			<Modal
 				title="计划内容"
-				visible={visible}
+				visible={createVisible}
 				onOk={handleCreatePlan}
-				onCancel={handleCancel}
+				onCancel={handleCreateCancel}
 				okButtonProps={{ theme: "light" }}
 				okText={"提交"}
+				closeOnEsc={true}
+			>
+				<Form labelPosition="inset" layout="horizontal" ref={formRef}>
+					<Form.Input
+						field="target"
+						label="目标"
+						trigger="blur"
+						style={{ width: 350 }}
+					/>
+					<Form.Select field="content" label="内容" style={{ width: 350 }}>
+						<Form.Select.Option value="单词">单词</Form.Select.Option>
+						<Form.Select.Option value="语法">语法</Form.Select.Option>
+						<Form.Select.Option value="写作">写作</Form.Select.Option>
+						<Form.Select.Option value="阅读">阅读</Form.Select.Option>
+					</Form.Select>
+					<Form.Input
+						field="key_result"
+						label="阶段性结果"
+						trigger="blur"
+						style={{ width: 350 }}
+					/>
+					<Form.DatePicker
+						field="deadline"
+						label="截止日期"
+						style={{ width: 350 }}
+						initValue={new Date()}
+					/>
+				</Form>
+			</Modal>
+			<Modal
+				title="计划内容"
+				visible={updateVisible}
+				onOk={handleUpdatePlan}
+				onCancel={handleUpdateCancel}
+				okButtonProps={{ theme: "light" }}
+				okText={"提交修改"}
 				closeOnEsc={true}
 			>
 				<Form labelPosition="inset" layout="horizontal" ref={formRef}>
