@@ -48,10 +48,10 @@ model Message {
   updated_at DateTime @default(now()) @updatedAt
   sender     Sender
   text       String?
-  chat       Chat     @relation(fields: [chatId], references: [id])
-  chatId     Int
+  chat       Chat     @relation(fields: [chat_id], references: [id])
+  chat_id    Int
 
-  @@index([chatId])
+  @@index([chat_id])
 }
 
 model Notebook {

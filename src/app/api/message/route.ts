@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
 
 			const messages = await prisma.message.findMany({
 				where: {
-					chatId: chat?.id,
+					chat_id: chat?.id,
 				},
 			});
 
@@ -41,7 +41,7 @@ export async function DELETE(req: NextRequest) {
 
 			const messages = await prisma.message.deleteMany({
 				where: {
-					chatId: chat?.id,
+					chat_id: chat?.id,
 				},
 			});
 
