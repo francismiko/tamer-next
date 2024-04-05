@@ -51,7 +51,7 @@ export default function Personal() {
 					{materials.map((material, index) => (
 						<div className="h-full p-6">
 							<Card
-								title={<Meta title="Test Doc" />}
+								title={<Meta title={`文件 ${material}`} />}
 								headerStyle={{ padding: "8px" }}
 								headerExtraContent={
 									<Button theme="borderless" type="primary">
@@ -80,7 +80,7 @@ export default function Personal() {
 									</Space>
 								}
 							>
-								这是一段测试文字
+								{`这是关于文件 ${material} 的描述`}
 							</Card>
 						</div>
 					))}
